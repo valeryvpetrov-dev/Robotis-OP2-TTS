@@ -3,7 +3,7 @@ Script for manual generation of speech audio files based on text files.
 
 1. Create ./input folder and place .txt file with text there.
 2. Adjust configuration of TTS.
-3. Run script as main or use
+3. Run script as main or use synthesize function in other programs.
 """
 
 import os
@@ -12,7 +12,7 @@ from google.cloud import texttospeech
 
 def synthesize(str_text, file_audio,
                language_code: str, name: str,                                   # Logical params
-               speaking_rate: float, pitch: float, effects_profile_id: list     # Technical params
+               speaking_rate: float, pitch: float, effects_profile_id: list = []     # Technical params
                ):
     """
     Google Cloud TTS. Synthesizes speech audio file based on text using passed configuration.
