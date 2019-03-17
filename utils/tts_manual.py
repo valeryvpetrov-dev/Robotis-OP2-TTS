@@ -81,7 +81,8 @@ if __name__ == '__main__':
         Details: https://cloud.google.com/docs/authentication/getting-started
     1. Create ./input dir.
     2. Place .txt files there.
-    3. Adjust TTS configuration - dict_config_tts.
+    3. Adjust TTS configuration - dict_config_tts. If you have several configurations place them in list_dict_config_tts.
+        For each configuration ./output/<name> directory will be created.
     3. Run script.
     4. Check out result in ./output directory. Audio files have the same name as corresponding .txt.
     """
@@ -94,20 +95,99 @@ if __name__ == '__main__':
     except FileExistsError:
         pass
 
-    dict_config_tts = {
-        # Logical params
-        "language_code": "ru-RU",                               # Russian language
-        "name": "ru-RU-Wavenet-B",                              # Male voice
-        # Technical params
-        "speaking_rate": 0.9,                                   # A bit slower
-        "pitch": 6.0,                                           # A bit rise semitones
-        "effects_profile_id": ["telephony-class-application"]
-    }
+    list_dict_config_tts = [                                        # list of all configurations to be applied
+        {                                                           # gradeschooler girl
+            # Logical params
+            "language_code": "ru-RU",                               # Russian language
+            "name": "ru-RU-Standard-A",                             # female voice
+            # Technical params
+            "speaking_rate": 0.85,                                   # a bit slower
+            "pitch": 5.6,                                           # small rise semitones
+            "effects_profile_id": ["large-home-entertainment-class-device"]
+        },
+        {                                                           # teen girl
+            "language_code": "ru-RU",                               # Russian language
+            "name": "ru-RU-Standard-C",                             # female voice
+            "speaking_rate": 0.85,                                  # a bit slower
+            "pitch": 4.8,                                           # small rise semitones
+            "effects_profile_id": ["large-home-entertainment-class-device"]
+        },
+        {                                                           # young adult girl
+            "language_code": "ru-RU",  # Russian language
+            "name": "ru-RU-Wavenet-A",  # female voice
+            "speaking_rate": 0.85,  # a bit slower
+            "pitch": 4.4,  # small rise semitones
+            "effects_profile_id": ["large-home-entertainment-class-device"]
+        },
+        {  # young adult girl
+            "language_code": "ru-RU",  # Russian language
+            "name": "ru-RU-Wavenet-C",  # female voice
+            "speaking_rate": 0.85,  # a bit slower
+            "pitch": 7.1,  # medium rise semitones
+            "effects_profile_id": ["large-home-entertainment-class-device"]
+        },
+        {  # teen boy
+            "language_code": "ru-RU",  # Russian language
+            "name": "ru-RU-Standard-B",  # male voice
+            "speaking_rate": 0.85,  # a bit slower
+            "pitch": 6.6,  # medium rise semitones
+            "effects_profile_id": ["large-home-entertainment-class-device"]
+        },
+        {  # teen boy
+            "language_code": "ru-RU",  # Russian language
+            "name": "ru-RU-Standard-D",  # male voice
+            "speaking_rate": 0.85,  # a bit slower
+            "pitch": 7.2,  # medium rise semitones
+            "effects_profile_id": ["large-home-entertainment-class-device"]
+        },
+        {  # teen boy
+            "language_code": "ru-RU",  # Russian language
+            "name": "ru-RU-Wavenet-B",  # male voice
+            "speaking_rate": 0.85,  # a bit slower
+            "pitch": 8,  # medium rise semitones
+            "effects_profile_id": ["large-home-entertainment-class-device"]
+        },
+        {  # young adult boy
+            "language_code": "ru-RU",  # Russian language
+            "name": "ru-RU-Wavenet-D",  # male voice
+            "speaking_rate": 0.85,  # a bit slower
+            "pitch": 9.2,  # medium rise semitones
+            "effects_profile_id": ["large-home-entertainment-class-device"]
+        },
+
+
+        # {  # young adult boy
+        #     "language_code": "tr-TR",  # Russian language
+        #     "name": "tr-TR-Wavenet-B",  # male voice
+        #     "speaking_rate": 0.85,  # a bit slower
+        #     "pitch": 6.1,  # medium rise semitones
+        #     "effects_profile_id": ["large-home-entertainment-class-device"]
+        # },
+        # {  # young adult boy
+        #     "language_code": "tr-TR",  # Russian language
+        #     "name": "tr-TR-Wavenet-A",  # male voice
+        #     "speaking_rate": 0.85,  # a bit slower
+        #     "pitch": 2.4,  # medium rise semitones
+        #     "effects_profile_id": ["large-home-entertainment-class-device"]
+        # },
+    ]
 
     for str_name_input_file in listdir(str_path_input_dir):
-        file_text = open("{dir}/{file}".format(dir=str_path_input_dir, file=str_name_input_file), 'r')
+        for dict_config_tts in list_dict_config_tts:
+            str_name_config = dict_config_tts["name"]
+            str_path_output_dir_config = "{dir}/{config}".format(dir=str_path_output_dir, config=str_name_config)
+            try:
+                os.mkdir(str_path_output_dir_config)
+            except FileExistsError:
+                pass
 
-        str_name_file_audio = "{name}.{extension}".format(name=str_name_input_file.split(".")[0], extension="mp3")
-        file_audio = open("{dir}/{file}".format(dir=str_path_output_dir, file=str_name_file_audio), 'wb')
+            file_text = open("{dir}/{file}".format(dir=str_path_input_dir, file=str_name_input_file), 'r')
 
-        synthesize(file_text.read(), file_audio, **dict_config_tts)
+            str_name_file_audio = "{name}.{extension}"\
+                .format(name=str_name_input_file.split(".")[0], extension="mp3")
+            file_audio = open("{dir}/{file}".format(dir=str_path_output_dir_config, file=str_name_file_audio), 'wb')
+
+            synthesize(file_text.read(), file_audio, **dict_config_tts)
+
+            print("Synthesis for configuration: {config} was done.".format(config=dict_config_tts))
+        print("Synthesis for file {file_name} was done.\n".format(file_name=str_name_input_file))
