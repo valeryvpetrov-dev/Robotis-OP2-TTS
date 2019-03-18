@@ -120,6 +120,3 @@ cmake-build-*/
 
 # backup copies
 *~
-
-# Google Cloud TTS credentials
-utils/credentials/
