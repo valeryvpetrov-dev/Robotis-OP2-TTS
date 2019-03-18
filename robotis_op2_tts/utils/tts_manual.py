@@ -15,10 +15,10 @@ def synthesize(str_text, file_audio,
                speaking_rate: float, pitch: float, effects_profile_id: list = []     # Technical params
                ):
     """
-    Google Cloud TTS. Synthesizes speech audio file based on text using passed configuration.
+    google_cloud_tts. Synthesizes speech audio file based on text using passed configuration.
 
     Note:
-    * Google Cloud TTS is used for speech synthesis.
+    * google_cloud_tts is used for speech synthesis.
     * Internet access is required.
     * GOOGLE_APPLICATION_CREDENTIALS environment variable must be set.
         Details: https://cloud.google.com/docs/authentication/getting-started
@@ -31,7 +31,7 @@ def synthesize(str_text, file_audio,
     * Description: https://cloud.google.com/text-to-speech/docs/reference/rpc/google.cloud.texttospeech.v1beta1#voiceselectionparams
     * List of available values: https://cloud.google.com/text-to-speech/docs/voices
     :param language_code: language tag from BCP-47.
-    :param name: Google Cloud TTS voice name.
+    :param name: google_cloud_tts voice name.
 
     Technical params:
     * Description: https://cloud.google.com/text-to-speech/docs/reference/rpc/google.cloud.texttospeech.v1beta1#audioconfig
