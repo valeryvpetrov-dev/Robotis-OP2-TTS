@@ -1,3 +1,57 @@
+class RobotisOP2TTSClient:
+    """
+    Robotis OP 2 Text-to-Speech (TTS) client class.
+    """
+    def __init__(self, dict_config_tts):
+        """
+        Constructor of TTS client object.
+
+        1. Initializes object;
+        2. Sets passed configuration.
+        """
+        super().__init__()
+        self.set_configuration(dict_config_tts)
+
+    def set_configuration(self, dict_config_tts):
+        """
+        Setter for config_tts field.
+
+        * Configuration will be validated before set.
+
+        :raises
+            *
+        :param dict_config_tts: tts configuration dictionary
+        :return: None
+        """
+        from config.validator import validate_configuration
+
+        validate_configuration(dict_config_tts)
+        self.__config_tts = dict_config_tts
+
+    def synthesise_audio(self, source_text):
+        """
+        Creates audio file with passed source_text spoken.
+
+        * Audio file format - .mp3.
+        * File will be stored in ./audio directory.
+
+        :param source_text: string or file with text for synthesise.
+        :return: audio file with synthesised speech.
+        """
+        pass    # TODO
+
+    def synthesise_speech(self, source_text):
+        """
+        Speaks passed source_text.
+
+        * Actually calls synthesise_audio and passes result to audio player.
+
+        :param source_text: string or file with text for synthesise.
+        :return: None.
+        """
+        pass    # TODO
+
+
 if __name__ == '__main__':
     """
     Example of using Robotis OP2 Text-to-Speech (TTS) client.
