@@ -1,0 +1,23 @@
+{
+  "audio_file_format": "mp3",
+  "audio_file_player": {
+    "name": "mpg123",
+    "command": "mpg123 {file}"
+  },
+  "tts_engines": {
+    "cloud": {
+      "google_cloud": {
+        "language_code": "ru-RU",
+        "name": "ru-RU-Wavenet-B",
+        "speaking_rate": 0.9,
+        "pitch": 6.0,
+        "effects_profile_id": ["telephony-class-application"]
+      }
+    },
+    "onboard": {
+      "festival": {
+        "language": "russian"
+      }
+    }
+  }
+}
