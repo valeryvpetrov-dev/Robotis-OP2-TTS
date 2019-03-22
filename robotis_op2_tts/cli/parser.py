@@ -1,5 +1,5 @@
 import os
-import sys
+from sys import exit
 from exceptions.cli import *
 
 
@@ -81,6 +81,6 @@ def parse_arguments():
         validate_configuration_file_path(args)
         validate_text_source(args)
     except RobotisOP2TTSException as e:
-        sys.exit(str(e))
+        exit(str(e))
 
     return vars(args)
