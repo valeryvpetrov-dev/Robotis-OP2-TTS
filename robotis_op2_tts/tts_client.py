@@ -2,7 +2,7 @@ class RobotisOP2TTSClient:
     """
     Robotis OP 2 Text-to-Speech (TTS) client class.
     """
-    def __init__(self, dict_config_tts):
+    def __init__(self, str_path_config_file):
         """
         Constructor of TTS client object.
 
@@ -10,22 +10,21 @@ class RobotisOP2TTSClient:
         2. Sets passed configuration.
         """
         super().__init__()
-        self.set_configuration(dict_config_tts)
+        self.set_configuration(str_path_config_file)
 
-    def set_configuration(self, dict_config_tts):
+    def set_configuration(self, str_path_config_file):
         """
         Setter for config_tts field.
 
-        * Configuration will be validated before set.
+        * Configuration file will be parsed to dictionary.
+        * Configuration dictionary will be validated before set.
 
-        :raises
-            *
-        :param dict_config_tts: tts configuration dictionary
-        :return: None
+        :param str_path_config_file: path to tts configuration file.
+        :return: None (object field __config_tts will be set).
         """
-        from config.validator import validate_configuration
+        from config.parser import parse_configuration
 
-        validate_configuration(dict_config_tts)
+        dict_config_tts = parse_configuration(str_path_config_file)
         self.__config_tts = dict_config_tts
 
     def synthesise_audio(self, source_text):
@@ -84,9 +83,9 @@ if __name__ == '__main__':
     from cli.parser import parse_arguments
 
     dict_args = parse_arguments()
-    dict_config_tts = dict_args["config"]
+    str_path_config_file = dict_args["config"]
 
-    tts = RobotisOP2TTSClient(dict_config_tts)
+    tts = RobotisOP2TTSClient(str_path_config_file)
 
     if dict_args.get("text"):
         str_text = dict_args["text"]
