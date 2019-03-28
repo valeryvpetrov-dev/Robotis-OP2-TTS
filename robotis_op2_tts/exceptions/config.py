@@ -17,9 +17,17 @@ class AudioFilePlayerException(RobotisOP2TTSException):
         super().__init__("Audio player is not available.")
 
 
-class TTSEnginesNoProvidedException(RobotisOP2TTSException):
+class TTSEnginesNotProvidedException(RobotisOP2TTSException):
     """
-    TTS engines configurations were not provided exception class.
+    TTS engines configurations are not provided exception class.
     """
     def __init__(self) -> None:
         super().__init__("No one TTS engine configuration was not provided.")
+
+
+class TTSEnginesPriorityNotProvidedException(RobotisOP2TTSException):
+    """
+    Priority for cloud/onboard and particular TTSs are not provided exception class.
+    """
+    def __init__(self) -> None:
+        super().__init__("TTS priority is not provided.")
