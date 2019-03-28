@@ -1,6 +1,8 @@
 from tts_engines.base import AbstractTTSClient
 from ..base import InterfaceTTSCloudClient
 
+from google.cloud import texttospeech
+
 
 class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
     """
@@ -27,7 +29,9 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         Extends:
             - Creates instance of TextToSpeechClient and sets it as _client_tts.
         """
-        pass
+        self._str_path_output_dir = "./data/cloud_clients/google_cloud/audio"
+        super().set_configuration(dict_config)
+        self._client_tts = texttospeech.TextToSpeechClient()
 
     def synthesise_audio(self, source_text):
         """
