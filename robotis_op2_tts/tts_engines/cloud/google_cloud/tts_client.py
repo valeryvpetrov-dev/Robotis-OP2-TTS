@@ -1,5 +1,8 @@
 from tts_engines.base import AbstractTTSClient
 from ..base import InterfaceTTSCloudClient
+from exceptions.tts_engines.cloud_clients.google_cloud import GoogleApplicationCredentialsNotProvided
+
+import os
 
 from google.cloud import texttospeech
 
@@ -69,7 +72,10 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         :raises:
             * GoogleApplicationCredentialsNotProvided - if required credentials are not provided.
         """
-        pass
+        if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") is not None:
+            return True
+        else:
+            raise GoogleApplicationCredentialsNotProvided()
 
     def validate_network(self):
         """
@@ -82,4 +88,4 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         :raises:
             *
         """
-        pass
+        pass    # Google Cloud TTS does not require specific validation
