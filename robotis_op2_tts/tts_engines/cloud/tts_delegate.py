@@ -1,5 +1,6 @@
 from tts_engines.base import AbstractTTSClientDelegate
 from .base import InterfaceTTSCloudClient
+from .google_cloud.tts_client import TTSGoogleCloudClient
 
 
 class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient):
@@ -19,7 +20,18 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         Extends:
             - Creates instance of specific TTS cloud_clients client based on configuration and sets it as _client_tts.
         """
-        pass
+        super().set_configuration(dict_config)
+
+        for str_name_tts, dict_config_tts in self._config_tts.items():
+            if str_name_tts == 'google_cloud_tts':
+                dict_config_tts_copy = dict_config_tts.copy()
+                dict_config_tts_copy['audio_file_format'] = self._config_tts['audio_file_format']
+                self._client_tts = TTSGoogleCloudClient(dict_config_tts_copy)
+            elif False:
+                pass        # fill for another cloud_clients tts engines
+            else:
+                continue    # skip information not about TTS clients
+        self._config_tts.pop('audio_file_format', None)  # to not to duplicate data
 
     def synthesise_audio(self, source_text):
         """
