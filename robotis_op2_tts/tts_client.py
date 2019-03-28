@@ -1,4 +1,7 @@
 from base import InterfaceTTSClient
+from exceptions.base import RobotisOP2TTSException
+from exceptions.config import AudioFileFormatException, AudioFilePlayerException, \
+            TTSEnginesPriorityNotProvidedException, TTSEnginesNotProvidedException
 
 
 class RobotisOP2TTSClient(InterfaceTTSClient):
@@ -68,10 +71,105 @@ class RobotisOP2TTSClient(InterfaceTTSClient):
         """
         pass
 
+    def _validate_audio_file_format(self, str_format_file_audio):
+        """
+        Validates TTS configuration audio file format field.
+
+        * Supported formats:
+            - mp3, wav, ogg, gsm, dct, au, aiff, flac, vox, raw.
+
+        ! Your audio file player must be able to play this format)
+
+        :raises
+            * AudioFileFormatException - audio_file_format field is invalid.
+        :param str_format_file_audio: string-value from configuration dictionary.
+        :return: bool - validation result. (True - valid, False - invalid)
+        """
+        LIST_AVAILABLE_AUDIO_FORMAT = ["mp3", "wav", "ogg", "gsm", "dct", "au", "aiff", "flac", "vox", "raw"]
+
+        if str_format_file_audio in LIST_AVAILABLE_AUDIO_FORMAT:
+            return True
+        else:
+            raise AudioFileFormatException()
+
+    def _validate_audio_file_player(self, dict_audio_file_player_config):
+        """
+        Validates availability of audio player.
+
+        * Audio player program should be pre-installed.
+        * which command is used to check player installation.
+
+        :raises
+            * AudioFilePlayerException - audio player is not available.
+        :param dict_audio_file_player_config: configuration of audio file player.
+        :return: bool - validation result. (True - valid, False - invalid).
+        """
+        import subprocess
+
+        if len(subprocess.check_output(["which", dict_audio_file_player_config["name"]])) > 0:
+            return True
+        else:
+            raise AudioFilePlayerException()
+
+    def _validate_tts_engines_priority(self, dict_engines_tts):
+        """
+        Validates presence of priority field for TTS synthesis methods (cloud/onboard).
+
+        :param dict_engines_tts: dictionary with TTS engines descriptions.
+        :return: bool - validation result. (True - valid, False - invalid).
+        """
+        try:
+            dict_engines_tts_cloud = dict_engines_tts['cloud']
+            try:
+                if int(dict_engines_tts_cloud['priority']):
+                    pass
+            except ValueError or TypeError:  # provided priority is not a number or not provided
+                return False
+        except KeyError:  # if configuration for TTS synthesis method is not provided
+            pass
+
+        try:
+            dict_engines_tts_onboard = dict_engines_tts['onboard']
+            try:
+                if int(dict_engines_tts_onboard['priority']):
+                    pass
+            except ValueError or TypeError:  # provided priority is not a number or not provided
+                return False
+        except KeyError:  # if configuration for TTS synthesis method is not provided
+            pass
+
+        return True
+
+    def _validate_tts_engines(self, dict_engines_tts):
+        """
+        Validates TTS engines declared in configuration.
+            - Superficial validation (does not focus on specification of particular TTS).
+
+        * Each TTS service is responsible for self-validation.
+
+        :raises
+            * TTSEnginesPriorityNotProvidedException - TTS engine priority is not provided.
+            * TTSEnginesNotProvidedException - TTS engines are not provided.
+        :param dict_engines_tts: dictionary with TTS engines descriptions.
+        :return: bool - validation result. (True - valid, False - invalid).
+        """
+        if dict_engines_tts['cloud'] or dict_engines_tts['onboard']:
+            if self._validate_tts_engines_priority(dict_engines_tts):
+                return True
+            else:
+                raise TTSEnginesPriorityNotProvidedException()
+        else:
+            raise TTSEnginesNotProvidedException()
+
     def validate_configuration(self, dict_config):
         """
         Implements corresponding method of interface parent class.
 
         Validates configuration superficially. TTS clients details will not be touched.
         """
-        pass
+        try:
+            return self._validate_audio_file_format(dict_config["audio_file_format"]) and \
+                   self._validate_audio_file_player(dict_config["audio_file_player"]) and \
+                   self._validate_tts_engines(dict_config["tts_engines"])
+        except RobotisOP2TTSException as e:
+            exit(str(e))
