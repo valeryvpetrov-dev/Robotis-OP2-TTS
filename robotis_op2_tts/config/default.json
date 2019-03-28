@@ -6,17 +6,27 @@
   },
   "tts_engines": {
     "cloud": {
-      "google_cloud": {
-        "language_code": "ru-RU",
-        "name": "ru-RU-Wavenet-B",
-        "speaking_rate": 0.9,
-        "pitch": 6.0,
-        "effects_profile_id": ["telephony-class-application"]
+      "priority": 0,
+      "google_cloud_tts": {
+        "call_params": {
+          "language_code": "ru-RU",
+          "name": "ru-RU-Wavenet-B",
+          "speaking_rate": 0.9,
+          "pitch": 6.0,
+          "effects_profile_id": ["telephony-class-application"]
+        },
+        "network": {
+          "test_ping_destination": "cloud.google.com",
+          "test_download_destination": "google.com"
+        }
       }
     },
     "onboard": {
+      "priority": 1,
       "festival": {
-        "language": "russian"
+        "call_params": {
+          "language": "russian"
+        }
       }
     }
   }
