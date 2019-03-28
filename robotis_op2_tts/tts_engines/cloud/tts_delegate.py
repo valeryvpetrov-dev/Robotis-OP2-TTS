@@ -1,5 +1,8 @@
 from tts_engines.base import AbstractTTSClientDelegate
 from .base import InterfaceTTSCloudClient
+from exceptions.base import RobotisOP2TTSException
+from exceptions.tts_engines.cloud import CallParamNotFoundException, NetworkParamNotFoundException, \
+                                            NetworkNotAccessibleException, NetworkSpeedNotApplicableException
 from .google_cloud.tts_client import TTSGoogleCloudClient
 
 
@@ -59,7 +62,31 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
             * NetworkParamNotFoundException - if required network param is not provided.
             * TTS clients exceptions - if validation of specific TTS client fails.
         """
-        pass
+        try:
+            for str_name_tts, dict_config_tts in dict_config.items():
+                # general validation with specific params
+                if str_name_tts == 'google_cloud_tts':
+                    LIST_CALL_PARAMS_REQUIRED = TTSGoogleCloudClient.LIST_CALL_PARAMS_REQUIRED
+                    LIST_NETWORK_PARAMS_REQUIRED = TTSGoogleCloudClient.LIST_NETWORK_PARAMS_REQUIRED
+                elif False:
+                    pass        # fill for another cloud_clients tts engines
+                else:
+                    continue    # skip information not about TTS clients
+
+                for _str_name_param, _value in dict_config_tts['call_params'].items():
+                    if _str_name_param in LIST_CALL_PARAMS_REQUIRED and _value is not None:
+                        pass
+                    else:
+                        raise CallParamNotFoundException()
+
+                for _str_name_param, _value in dict_config_tts['network'].items():
+                    if _str_name_param in LIST_NETWORK_PARAMS_REQUIRED and _value is not None:
+                        pass
+                    else:
+                        raise NetworkParamNotFoundException()
+            return True
+        except RobotisOP2TTSException as e:
+            exit(str(e))
 
     def validate_network(self):
         """
@@ -76,4 +103,34 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
             * NetworkSpeedNotApplicableException - if network speed is too low.
             * TTS clients exceptions - if validation of specific TTS client fails.
         """
-        pass
+        try:
+            for str_name_tts, dict_config_tts in self._config_tts.items():
+                # general validation with specific params
+                if str_name_tts == 'google_cloud_tts':
+                    FLOAT_LATENCY_MAX = TTSGoogleCloudClient.FLOAT_LATENCY_MAX
+                    FLOAT_SPEED_DOWNLOAD_MIN = TTSGoogleCloudClient.FLOAT_SPEED_DOWNLOAD_MIN
+                elif False:
+                    pass        # fill for another cloud_clients tts engines
+                else:
+                    continue    # skip information not about TTS clients
+
+                from pyspeedtest import SpeedTest
+
+                if self._speedTest is None:
+                    self._speedTest = SpeedTest(host=dict_config_tts['network']['test_download_destination'], runs=5)
+
+                # returns latency in ms
+                float_latency = self._speedTest.ping(dict_config_tts['network']['test_ping_destination'])
+                if float_latency > FLOAT_LATENCY_MAX:
+                    raise NetworkNotAccessibleException()
+
+                # returns download speed in bits/sec
+                float_download_speed = self._speedTest.download()
+                if float_download_speed < FLOAT_SPEED_DOWNLOAD_MIN:
+                    raise NetworkSpeedNotApplicableException()
+
+                # specific validation
+                self._client_tts.validate_network()
+            return True
+        except RobotisOP2TTSException as e:
+            exit(str(e))
