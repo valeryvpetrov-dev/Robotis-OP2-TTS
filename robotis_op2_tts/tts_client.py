@@ -59,17 +59,32 @@ class RobotisOP2TTSClient(InterfaceTTSClient):
                 dict_config_onboard_tts['audio_file_player'] = self._config_tts['audio_file_player']
                 self._client_tts_onboard = TTSOnboardClientDelegate(dict_config_onboard_tts)
 
+    def get_preferable_tts_client(self):
+        """
+        Returns TTS client with highest priority.
+
+        :return: Implementation of InterfaceTTSClient (actually, child of AbstractTTSClientDelegate).
+        """
+        if self._config_tts['tts_engines']['cloud']['priority'] < \
+                self._config_tts['tts_engines']['onboard']['priority']:
+            return self._client_tts_cloud
+        elif self._config_tts['tts_engines']['cloud']['priority'] > \
+                self._config_tts['tts_engines']['onboard']['priority']:
+            return self._client_tts_onboard
+        else:  # for equal priorities prefer cloud method
+            return self._client_tts_cloud
+
     def synthesise_audio(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
-        pass
+        self.get_preferable_tts_client().synthesise_audio(source_text)
 
     def synthesise_speech(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
-        pass
+        self.get_preferable_tts_client().synthesise_speech(source_text)
 
     def _validate_audio_file_format(self, str_format_file_audio):
         """
