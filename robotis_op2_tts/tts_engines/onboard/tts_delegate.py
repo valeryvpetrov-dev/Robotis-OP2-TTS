@@ -1,5 +1,7 @@
 from tts_engines.base import AbstractTTSClientDelegate
 from .base import InterfaceTTSOnboardClient
+from .festival.tts_client import TTSFestivalClient
+from exceptions.base import RobotisOP2TTSException
 
 
 class TTSOnboardClientDelegate(AbstractTTSClientDelegate, InterfaceTTSOnboardClient):
@@ -13,10 +15,24 @@ class TTSOnboardClientDelegate(AbstractTTSClientDelegate, InterfaceTTSOnboardCli
     def set_configuration(self, dict_config):
         """
         Overrides corresponding method of abstract parent class.
+
         Extends:
             - Creates instance of specific TTS onboard client based on configuration and sets it as _client_tts.
         """
-        pass
+        super().set_configuration(dict_config)
+
+        try:
+            for str_name_tts, dict_config_tts in self._config_tts.items():
+                if str_name_tts == 'festival':
+                    dict_config_tts_copy = dict_config_tts.copy()
+                    dict_config_tts_copy['audio_file_format'] = self._config_tts['audio_file_format']
+                    self._client_tts = TTSFestivalClient(dict_config_tts_copy)
+                elif False:
+                    pass  # fill for another onboard TTS clients
+                else:
+                    continue  # skip information not about TTS clients
+        except RobotisOP2TTSException as e:
+            exit(str(e))
 
     def synthesise_audio(self, source_text):
         """
