@@ -12,6 +12,8 @@ class InterfaceTTSCloudClient(InterfaceTTSClient):
         """
         Validates network with regard to specific TTS cloud client requirements based on configuration.
 
+        * Call of what method is performed via initialized instance.
+
         :return: bool - indicator of succeeded validation.
         """
         pass
