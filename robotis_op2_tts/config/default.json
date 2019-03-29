@@ -1,8 +1,8 @@
 {
   "audio_file_format": "mp3",
   "audio_file_player": {
-    "name": "mpg123",
-    "command": "mpg123 {file}"
+    "name": "aplay",
+    "command": "aplay {file}"
   },
   "tts_engines": {
     "cloud": {
@@ -24,8 +24,15 @@
     "onboard": {
       "priority": 1,
       "festival": {
-        "call_params": {
-          "language": "russian"
+        "play": {
+          "command": "echo {text} | festival --tts {call_params}",
+          "call_params": {
+            "--language": "russian"
+          }
+        },
+        "save": {
+          "command": "cat {text} | text2wave -o {file} -eval {expression}",
+          "expression": "'(voice_msu_ru_nsh_clunits)'"
         }
       }
     }
