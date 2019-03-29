@@ -24,7 +24,19 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         Extends:
             - Initializes commands.
         """
-        pass
+        self._str_path_output_dir = "./data/onboard/festival/audio"
+        super().set_configuration(dict_config)
+
+        # compile _str_command_play_speech
+        self._str_command_play_speech = self._config_tts['play']['command']
+        _list_param_call = []
+        for _str_param_call, value in self._config_tts['play']['call_params'].items():
+            _list_param_call.append("{key} {value}".format(key=_str_param_call, value=str(value)))
+        self._str_command_play_speech = self._str_command_play_speech.replace("{call_params}", " ".join(_list_param_call))
+
+        # compile _str_command_save_speech
+        self._str_command_save_speech = self._config_tts['save']['command']\
+            .replace("expression", str(self._config_tts['save']['expression']))
 
     def synthesise_audio(self, source_text):
         """
