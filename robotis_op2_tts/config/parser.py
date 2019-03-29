@@ -18,27 +18,13 @@ def parse_configuration(str_path_file_config):
             "cloud": {                                      - description of cloud TTS.
               "priority" : <int_value>                      - priority number of synthesis method. Bigger value - more preferable to use.
               "<engine_name>": {                            - name of service.
-                "call_params": {                            - engine call parameters
-                  "<field_1>": <value_1>,                   - field name and value required to work of service.
-                  "<field_2>": <value_2>,
-                  ...
-                  "<filed_n>": <value_n>
-                },
-                "network": {                                - network check parameters
-                  "test_ping_destination": "<value>",       - destination to ping to check access to resource
-                  "test_download_destination": "<value>"    - destination to download to check download speed
-                }
+                ...                                         - free format. just remember to validate and parse it correctly.
               }
             },
             "onboard": {                                    - description of onboard TTS.
               "priority" : <int_value>                      - priority number of synthesis method. Bigger value - more preferable to use.
               "<engine_name>": {                            - name of service.
-                "call_params": {                            - engine call params
-                  "<field_1>": <value_1>,                   - field name and value required to work of service.
-                  "<field_2>": <value_2>,
-                  ...
-                  "<filed_n>": <value_n>
-                }
+                ...                                         - free format. just remember to validate and parse it correctly.
               }
             }
           }
