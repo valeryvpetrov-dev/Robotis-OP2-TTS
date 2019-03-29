@@ -3,14 +3,14 @@ from base import InterfaceTTSClient
 
 class InterfaceTTSCloudClient(InterfaceTTSClient):
     """
-    Abstract TTS cloud_clients client class.
-        - Declares interface of interaction with TTS cloud_clients client.
+    Abstract TTS cloud client class.
+        - Declares interface of interaction with TTS cloud client.
         - Extends interface of InterfaceTTSClient.
-        - Should be used as parent of all TTS cloud_clients clients.
+        - Should be used as parent of all TTS cloud clients.
     """
     def validate_network(self):
         """
-        Validates network with regard to specific TTS cloud_clients client requirements based on configuration.
+        Validates network with regard to specific TTS cloud client requirements based on configuration.
 
         :return: bool - indicator of succeeded validation.
         """

@@ -3,7 +3,7 @@ from ..base import RobotisOP2TTSException
 
 class TTSCloudClientException(RobotisOP2TTSException):
     """
-    Parent class for all available exceptions that may occur in work of TTS cloud_clients client.
+    Parent class for all available exceptions that may occur in work of TTS cloud client.
     """
     def __init__(self, message) -> None:
         super().__init__(message)
@@ -30,7 +30,7 @@ class NetworkNotAccessibleException(TTSCloudClientException):
     Network is not accessible exception class.
     """
     def __init__(self) -> None:
-        super().__init__("Network is not accessible, so cloud_clients TTS can't work.")
+        super().__init__("Network is not accessible, so cloud TTS can't work.")
 
 
 class NetworkSpeedNotApplicableException(TTSCloudClientException):
@@ -38,4 +38,4 @@ class NetworkSpeedNotApplicableException(TTSCloudClientException):
     Network speed is not applicable exception class.
     """
     def __init__(self) -> None:
-        super().__init__("Network speed is not applicable, so cloud_clients TTS can't work properly.")
+        super().__init__("Network speed is not applicable, so cloud TTS can't work properly.")

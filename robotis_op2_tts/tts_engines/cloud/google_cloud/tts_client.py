@@ -33,7 +33,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         Extends:
             - Creates instance of TextToSpeechClient and sets it as _client_tts.
         """
-        self._str_path_output_dir = "./data/cloud_clients/google_cloud/audio"
+        self._str_path_output_dir = "./data/cloud/google_cloud/audio"
         super().set_configuration(dict_config)
         self._client_tts = texttospeech.TextToSpeechClient()
 
@@ -59,13 +59,13 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
             Logical params:
                 - language_code: language tag from BCP-47.
                 - name: google_cloud voice name.
-                * Description: https://cloud_clients.google.com/text-to-speech/docs/reference/rpc/google.cloud_clients.texttospeech.v1beta1#voiceselectionparams
-                * List of available values: https://cloud_clients.google.com/text-to-speech/docs/voices
+                * Description: https://cloud.google.com/text-to-speech/docs/reference/rpc/google.cloud.texttospeech.v1beta1#voiceselectionparams
+                * List of available values: https://cloud.google.com/text-to-speech/docs/voices
             Technical params:
                 - speaking_rate: speed of pronunciation.
                 - pitch: voice pitch value.
                 - effects_profile_id: audio effect profile.
-                * Description: https://cloud_clients.google.com/text-to-speech/docs/reference/rpc/google.cloud_clients.texttospeech.v1beta1#audioconfig
+                * Description: https://cloud.google.com/text-to-speech/docs/reference/rpc/google.cloud.texttospeech.v1beta1#audioconfig
         """
         # creates audio file corresponding to source text
         if isinstance(source_text, TextIOBase):     # if source_text is represented as file
@@ -118,7 +118,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
             - Raises Google Cloud TTS exceptions.
         Checks:
             - Environment variable GOOGLE_APPLICATION_CREDENTIALS is set.
-                    Details: https://cloud_clients.google.com/docs/authentication/getting-started
+                    Details: https://cloud.google.com/docs/authentication/getting-started
         :raises:
             * GoogleApplicationCredentialsNotProvided - if required credentials are not provided.
         """

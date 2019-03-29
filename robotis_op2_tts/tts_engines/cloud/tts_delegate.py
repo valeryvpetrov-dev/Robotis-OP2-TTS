@@ -9,9 +9,9 @@ import subprocess
 
 class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient):
     """
-    TTS cloud_clients client delegate class.
-        - Initializes specific TTS cloud_clients client based on passed configuration.
-        - Redirects calls of interface methods to specific TTS cloud_clients client.
+    TTS cloud client delegate class.
+        - Initializes specific TTS cloud client based on passed configuration.
+        - Redirects calls of interface methods to specific TTS cloud client.
         - Has structure like AbstractTTSClientDelegate.
         - Behaves like InterfaceTTSCloudClient.
     """
@@ -22,7 +22,7 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         Overrides corresponding method of abstract parent class.
 
         Extends:
-            - Creates instance of specific TTS cloud_clients client based on configuration and sets it as _client_tts.
+            - Creates instance of specific TTS cloud client based on configuration and sets it as _client_tts.
         """
         super().set_configuration(dict_config)
 
@@ -32,7 +32,7 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
                 dict_config_tts_copy['audio_file_format'] = self._config_tts['audio_file_format']
                 self._client_tts = TTSGoogleCloudClient(dict_config_tts_copy)
             elif False:
-                pass        # fill for another cloud_clients tts engines
+                pass        # fill for another cloud tts engines
             else:
                 continue    # skip information not about TTS clients
         self._config_tts.pop('audio_file_format', None)  # to not to duplicate data
@@ -76,7 +76,7 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
                     LIST_CALL_PARAMS_REQUIRED = TTSGoogleCloudClient.LIST_CALL_PARAMS_REQUIRED
                     LIST_NETWORK_PARAMS_REQUIRED = TTSGoogleCloudClient.LIST_NETWORK_PARAMS_REQUIRED
                 elif False:
-                    pass        # fill for another cloud_clients tts engines
+                    pass        # fill for another cloud tts engines
                 else:
                     continue    # skip information not about TTS clients
 
@@ -117,7 +117,7 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
                     FLOAT_LATENCY_MAX = TTSGoogleCloudClient.FLOAT_LATENCY_MAX
                     FLOAT_SPEED_DOWNLOAD_MIN = TTSGoogleCloudClient.FLOAT_SPEED_DOWNLOAD_MIN
                 elif False:
-                    pass        # fill for another cloud_clients tts engines
+                    pass        # fill for another cloud tts engines
                 else:
                     continue    # skip information not about TTS clients
 
