@@ -42,7 +42,7 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         Implements corresponding method of interface parent class.
         """
         if self.validate_network():
-            self._client_tts.synthesise_audio(source_text)
+            return self._client_tts.synthesise_audio(source_text)
 
     def synthesise_speech(self, source_text):
         """

@@ -108,8 +108,10 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
     def synthesise_speech(self, source_text):
         """
         Implements corresponding method of interface parent class.
+
+        * Google Cloud TTS does not support real time synthesis
         """
-        pass    # Google Cloud TTS does not support real time synthesis
+        pass
 
     def validate_configuration(self, dict_config):
         """
