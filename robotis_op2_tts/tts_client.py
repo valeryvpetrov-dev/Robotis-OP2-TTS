@@ -78,7 +78,7 @@ class RobotisOP2TTSClient(InterfaceTTSClient):
         """
         Implements corresponding method of interface parent class.
         """
-        self.get_preferable_tts_client().synthesise_audio(source_text)
+        return self.get_preferable_tts_client().synthesise_audio(source_text)
 
     def synthesise_speech(self, source_text):
         """
