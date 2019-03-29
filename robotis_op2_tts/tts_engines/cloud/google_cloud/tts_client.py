@@ -1,6 +1,6 @@
 from tts_engines.base import AbstractTTSClient
 from ..base import InterfaceTTSCloudClient
-from exceptions.tts_engines.cloud_clients.google_cloud import GoogleApplicationCredentialsNotProvided
+from exceptions.tts_engines.cloud.google_cloud import *
 
 import os
 from io import TextIOBase
@@ -25,6 +25,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
     FLOAT_SPEED_DOWNLOAD_MIN = 40960    # 5 Kbytes/s * 1024 * 8 -> bits/sec
 
     _client_tts = None                                          # Google Cloud TTS client
+    _speedTest = None  # instance of speed test validator
 
     def set_configuration(self, dict_config):
         """
@@ -113,29 +114,56 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
     def validate_configuration(self, dict_config):
         """
         Overrides corresponding method of interface parent class.
-
+            - Responsible for full validation of configuration.
         Extends:
             - Raises Google Cloud TTS exceptions.
         Checks:
             - Environment variable GOOGLE_APPLICATION_CREDENTIALS is set.
                     Details: https://cloud.google.com/docs/authentication/getting-started
+            - Call params are provided.
+            - Network params are provided.
         :raises:
             * GoogleApplicationCredentialsNotProvided - if required credentials are not provided.
         """
-        if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") is not None:
-            return True
-        else:
+        if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") is None:
             raise GoogleApplicationCredentialsNotProvided()
+
+        for _str_name_param_call, _value in dict_config['call_params'].items():
+            if _str_name_param_call not in self.LIST_CALL_PARAMS_REQUIRED or _value is None:
+                raise CallParamNotFoundException()
+
+        for _str_name_param_call, _value in dict_config['network'].items():
+            if _str_name_param_call not in self.LIST_NETWORK_PARAMS_REQUIRED or _value is None:
+                raise NetworkParamNotFoundException()
+
+        return True
 
     def validate_network(self):
         """
         Overrides corresponding method of interface parent class.
-
+            - Responsible for full validation of configuration.
         Extends:
-            -
+            - Raises exceptions if validation was failed.
         Checks:
-            -
+            - Internet access.
+            - Download speed.
         :raises:
-            *
+            * NetworkNotAccessibleException - if network connection is not set.
+            * NetworkSpeedNotApplicableException - if network speed is too low.
         """
-        pass    # Google Cloud TTS does not require specific validation
+        from pyspeedtest import SpeedTest
+
+        if self._speedTest is None:
+            self._speedTest = SpeedTest(host=self._config_tts['network']['test_download_destination'], runs=2)
+
+        # returns latency in ms
+        float_latency = self._speedTest.ping(self._config_tts['network']['test_ping_destination'])
+        if float_latency > self.FLOAT_LATENCY_MAX:
+            raise NetworkNotAccessibleException()
+
+        # returns download speed in bits/sec
+        float_download_speed = self._speedTest.download()
+        if float_download_speed < self.FLOAT_SPEED_DOWNLOAD_MIN:
+            raise NetworkSpeedNotApplicableException()
+
+        return True
