@@ -32,6 +32,8 @@ class InterfaceTTSClient:
         """
         Validates configuration of TTS client.
 
+        * Call of what method is performed before instance initialization.
+
         :return: bool - indicator of succeeded validation.
         """
         pass
