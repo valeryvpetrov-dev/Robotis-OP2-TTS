@@ -53,4 +53,4 @@ class TTSOnboardClientDelegate(AbstractTTSClientDelegate, InterfaceTTSOnboardCli
         * If TTS onboard client configurations have something in common than method should be implemented.
         * For free format configuration there is no necessity to do general validation.
         """
-        pass
+        return True
