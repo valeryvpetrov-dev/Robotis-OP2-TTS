@@ -34,11 +34,12 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         _list_param_call = []
         for _str_param_call, value in self._config_tts['play']['call_params'].items():
             _list_param_call.append("{key} {value}".format(key=_str_param_call, value=str(value)))
-        self._str_command_play_speech = self._str_command_play_speech.replace("{call_params}", " ".join(_list_param_call))
+        self._str_command_play_speech = self._str_command_play_speech\
+            .replace("{call_params}", " ".join(_list_param_call))
 
         # compile _str_command_save_speech
         self._str_command_save_speech = self._config_tts['save']['command']\
-            .replace("expression", str(self._config_tts['save']['expression']))
+            .replace("{expression}", str(self._config_tts['save']['expression']))
 
     def synthesise_audio(self, source_text):
         """
@@ -89,15 +90,15 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         :param dict_config: Festival TTS configuration.
         :return: bool - true (valid), false (invalid).
         """
-        from os import stat
+        from os import stat, listdir
 
         # for current configuration of Festival
         _str_path_dir_share_festival_languages = '/usr/share/festival/languages/'
         _str_name_language = dict_config['play']['call_params']['--language']
-        _str_name_file_language = "language_{language}.scm".format(language=_str_name_language)
-
-        if stat(_str_path_dir_share_festival_languages + _str_name_file_language).st_size == 0:     # file is emtpy
-            raise LanguageNotSupportedException(_str_name_language)
+        for _str_name_file in listdir(_str_path_dir_share_festival_languages):
+            if _str_name_language in _str_name_file:        # check all files that corresponds to language
+                if stat(_str_path_dir_share_festival_languages + _str_name_file).st_size == 0:  # file is emtpy
+                    raise LanguageNotSupportedException(_str_name_language)
         return True
 
     def validate_configuration(self, dict_config):
