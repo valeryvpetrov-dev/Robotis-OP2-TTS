@@ -50,7 +50,23 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
                 * It is enough to set '(language_related_voice)'.
                 * Details: http://www.linuxcertif.com/man/1/text2wave/
         """
-        pass
+        from io import TextIOBase
+        import subprocess
+
+        _str_path_file_audio = self._get_path_file_audio(source_text)
+
+        if isinstance(source_text, TextIOBase):     # if source_text is represented as file
+            source_text = source_text.read()
+
+        _int_code_result = subprocess.check_call(
+            self._str_command_save_speech.format(text=source_text, file=_str_path_file_audio),
+            stderr=subprocess.STDOUT,
+            shell=True      # security hazard
+        )
+        if _int_code_result == 0:   # success
+            print('Audio file - {} was written.'.format(_str_path_file_audio))
+
+            return _str_path_file_audio
 
     def synthesise_speech(self, source_text):
         """
@@ -61,7 +77,21 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
                 * Festival TTS must support this language.
                 * Details: https://linux.die.net/man/1/festival
         """
-        pass
+        from io import TextIOBase
+        import subprocess
+
+        _str_path_file_audio = self._get_path_file_audio(source_text)
+
+        if isinstance(source_text, TextIOBase):  # if source_text is represented as file
+            source_text = source_text.read()
+
+        _str_output = subprocess.check_output(
+            self._str_command_play_speech.format(text=source_text),
+            stderr=subprocess.STDOUT,
+            shell=True      # security hazard
+        ).decode('utf-8')
+        print(_str_output)
+        return _str_path_file_audio
 
     def _validate_availability(self, dict_config):
         """

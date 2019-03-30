@@ -31,7 +31,7 @@
           }
         },
         "save": {
-          "command": "cat {text} | text2wave -o {file} -eval {expression}",
+          "command": "echo {text} | text2wave -o {file} -eval {expression}",
           "expression": "'(voice_msu_ru_nsh_clunits)'"
         }
       }
