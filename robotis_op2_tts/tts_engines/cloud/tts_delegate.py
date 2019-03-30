@@ -22,18 +22,15 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         """
         super().set_configuration(dict_config)
 
-        try:
-            for str_name_tts, dict_config_tts in self._config_tts.items():
-                if str_name_tts == 'google_cloud_tts':
-                    dict_config_tts_copy = dict_config_tts.copy()
-                    dict_config_tts_copy['audio_file_format'] = self._config_tts['audio_file_format']
-                    self._client_tts = TTSGoogleCloudClient(dict_config_tts_copy)
-                elif False:
-                    pass        # fill for another cloud tts engines
-                else:
-                    continue    # skip information not about TTS clients
-        except RobotisOP2TTSException as e:
-            exit(str(e))
+        for str_name_tts, dict_config_tts in self._config_tts.items():
+            if str_name_tts == 'google_cloud_tts':
+                dict_config_tts_copy = dict_config_tts.copy()
+                dict_config_tts_copy['audio_file_format'] = self._config_tts['audio_file_format']
+                self._client_tts = TTSGoogleCloudClient(dict_config_tts_copy)
+            elif False:
+                pass        # fill for another cloud tts engines
+            else:
+                continue    # skip information not about TTS clients
 
         self._config_tts.pop('audio_file_format', None)  # to not to duplicate data
 

@@ -113,32 +113,67 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         """
         pass
 
+    def _validate_enviroment_variable(self, dict_config):
+        """
+        Validates GOOGLE_APPLICATION_CREDENTIALS environment variable set.
+
+        * Details: https://cloud.google.com/docs/authentication/getting-started
+
+        :raises:
+            * GoogleApplicationCredentialsNotProvided - if required credentials are not provided.
+        :param dict_config: configuration of Google Cloud TTS.
+        :return: bool - true (valid) / false (invalid).
+        """
+        if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") is None:
+            raise GoogleApplicationCredentialsNotProvided()
+        return True
+
+    def _validate_call_params(self, dict_config):
+        """
+        Validates call params.
+
+        :raises:
+            * CallParamNotFoundException - if call params are not provided.
+        :param dict_config: configuration of Google Cloud TTS.
+        :return: bool - true (valid) / false (invalid).
+        """
+        for _str_name_param_call, _value in dict_config['call_params'].items():
+            if _str_name_param_call not in self.LIST_CALL_PARAMS_REQUIRED or _value is None:
+                raise CallParamNotFoundException()
+        return True
+
+    def _validate_network_params(self, dict_config):
+        """
+        Validates network params.
+
+        :raises:
+            * NetworkParamNotFoundException - if call network params are not provided.
+        :param dict_config: configuration of Google Cloud TTS.
+        :return: bool - true (valid) / false (invalid).
+        """
+        for _str_name_param_call, _value in dict_config['network'].items():
+            if _str_name_param_call not in self.LIST_NETWORK_PARAMS_REQUIRED or _value is None:
+                raise NetworkParamNotFoundException()
+        return True
+
     def validate_configuration(self, dict_config):
         """
         Overrides corresponding method of interface parent class.
             - Responsible for full validation of configuration.
         Extends:
+            - Validates specification of Google Cloud TTS.
             - Raises Google Cloud TTS exceptions.
         Checks:
             - Environment variable GOOGLE_APPLICATION_CREDENTIALS is set.
-                    Details: https://cloud.google.com/docs/authentication/getting-started
             - Call params are provided.
             - Network params are provided.
-        :raises:
-            * GoogleApplicationCredentialsNotProvided - if required credentials are not provided.
         """
-        if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") is None:
-            raise GoogleApplicationCredentialsNotProvided()
-
-        for _str_name_param_call, _value in dict_config['call_params'].items():
-            if _str_name_param_call not in self.LIST_CALL_PARAMS_REQUIRED or _value is None:
-                raise CallParamNotFoundException()
-
-        for _str_name_param_call, _value in dict_config['network'].items():
-            if _str_name_param_call not in self.LIST_NETWORK_PARAMS_REQUIRED or _value is None:
-                raise NetworkParamNotFoundException()
-
-        return True
+        try:
+            return self._validate_enviroment_variable(dict_config) and \
+                   self._validate_call_params(dict_config) and \
+                   self._validate_network_params(dict_config)
+        except RobotisOP2TTSException as e:
+            exit(str(e))
 
     def validate_network(self):
         """
