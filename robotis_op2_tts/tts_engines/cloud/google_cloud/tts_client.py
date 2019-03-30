@@ -69,15 +69,11 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
                 * Description: https://cloud.google.com/text-to-speech/docs/reference/rpc/google.cloud.texttospeech.v1beta1#audioconfig
         """
         # creates audio file corresponding to source text
-        if isinstance(source_text, TextIOBase):     # if source_text is represented as file
-            str_name_file_audio = os.path.basename(source_text.name).split(".")[0]
+        _str_path_file_audio = self._get_path_file_audio(source_text)
+        file_audio = open(_str_path_file_audio, 'wb')
+
+        if isinstance(source_text, TextIOBase):  # if source_text is represented as file
             source_text = source_text.read()
-        else:                                       # if source_text is represented as string
-            str_name_file_audio = source_text[:10]  # first 10 character from file
-        str_name_file_audio = "{name}.{extension}".format(name=str_name_file_audio,
-                                                          extension=self._str_format_file_audio)
-        str_path_file_audio = os.path.join(self._str_path_output_dir, str_name_file_audio)
-        file_audio = open(str_path_file_audio, 'wb')
 
         # set the text input to be synthesized
         synthesis_input = texttospeech.types.SynthesisInput(text=source_text)
@@ -103,7 +99,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         file_audio.write(response.audio_content)
 
         print('Audio file - {} was written.'.format(os.path.abspath(file_audio.name)))
-        return str_path_file_audio
+        return _str_path_file_audio
 
     def synthesise_speech(self, source_text):
         """
