@@ -1,5 +1,7 @@
 from tts_engines.base import AbstractTTSClient
 from ..base import InterfaceTTSOnboardClient
+from exceptions.base import RobotisOP2TTSException
+from exceptions.tts_engines.onboard.festival import FestivalNotAvailableException, LanguageNotSupportedException
 
 
 class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
@@ -60,6 +62,44 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         """
         pass
 
+    def _validate_availability(self, dict_config):
+        """
+        Validates Festival installation.
+
+        :raises:
+            * FestivalNotInstalledException - if Festival is not installed.
+        :param dict_config: Festival TTS configuration.
+        :return: bool - true (valid), false (invalid).
+        """
+        import subprocess
+
+        if len(subprocess.check_output(["which", "festival"])) == 0:
+            raise FestivalNotAvailableException()
+        return True
+
+    def _validate_language_support(self, dict_config):
+        """
+        Validates if Festival supports passed language.
+
+        Checks:
+            - Festival language file is not empty.
+                * Location of language settings may vary between versions of Festival.
+        :raises:
+            * LanguageNotSupportedException - if Festival dose not support language.
+        :param dict_config: Festival TTS configuration.
+        :return: bool - true (valid), false (invalid).
+        """
+        from os import stat
+
+        # for current configuration of Festival
+        _str_path_dir_share_festival_languages = '/usr/share/festival/languages/'
+        _str_name_language = dict_config['play']['call_params']['--language']
+        _str_name_file_language = "language_{language}.scm".format(language=_str_name_language)
+
+        if stat(_str_path_dir_share_festival_languages + _str_name_file_language).st_size == 0:     # file is emtpy
+            raise LanguageNotSupportedException(_str_name_language)
+        return True
+
     def validate_configuration(self, dict_config):
         """
         Overrides corresponding method of interface parent class.
@@ -70,8 +110,9 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         Checks:
             - Festival TTS is installed.
             - Passed language has support in festival.
-        :raises:
-            * FestivalNotInstalledException - if Festival TTS is not installed in system.
-            * LanguageNotSupportedException - if language is not supported by Festival.
         """
-        pass
+        try:
+            return self._validate_availability(dict_config) and \
+                   self._validate_language_support(dict_config)
+        except RobotisOP2TTSException as e:
+            exit(str(e))
