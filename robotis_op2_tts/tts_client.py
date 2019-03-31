@@ -2,6 +2,8 @@ from base import InterfaceTTSClient
 from exceptions.base import RobotisOP2TTSException
 from exceptions.config import AudioFileFormatException, AudioFilePlayerException, \
             TTSEnginesPriorityNotProvidedException, TTSEnginesNotProvidedException
+from tts_engines.cloud.tts_delegate import TTSCloudClientDelegate
+from tts_engines.onboard.tts_delegate import TTSOnboardClientDelegate
 
 
 class RobotisOP2TTSClient(InterfaceTTSClient):
@@ -12,6 +14,7 @@ class RobotisOP2TTSClient(InterfaceTTSClient):
     _config_tts = None              # general configuration of Robotis OP2 TTS.
     _client_tts_cloud = None        # TTS cloud client
     _client_tts_onboard = None      # TTS onboard client
+    _client_tts_preferable = None   # preferable TTS client
 
     def __init__(self, str_path_file_config):
         """
@@ -37,8 +40,6 @@ class RobotisOP2TTSClient(InterfaceTTSClient):
         :return: None (object field _config_tts will be set).
         """
         from config.parser import parse_configuration
-        from tts_engines.cloud.tts_delegate import TTSCloudClientDelegate
-        from tts_engines.onboard.tts_delegate import TTSOnboardClientDelegate
 
         dict_config_tts = parse_configuration(str_path_file_config)
         if self.validate_configuration(dict_config_tts):
@@ -53,38 +54,59 @@ class RobotisOP2TTSClient(InterfaceTTSClient):
                 dict_config_cloud_tts['audio_file_format'] = self._config_tts['audio_file_format']
                 dict_config_cloud_tts['audio_file_player'] = self._config_tts['audio_file_player']
                 self._client_tts_cloud = TTSCloudClientDelegate(dict_config_cloud_tts)
-            elif dict_config_onboard_tts:
+            if dict_config_onboard_tts:
                 dict_config_onboard_tts.pop('priority', None) # information about priority is not valuable for TTS client
                 dict_config_onboard_tts['audio_file_format'] = self._config_tts['audio_file_format']
                 dict_config_onboard_tts['audio_file_player'] = self._config_tts['audio_file_player']
                 self._client_tts_onboard = TTSOnboardClientDelegate(dict_config_onboard_tts)
 
-    def get_preferable_tts_client(self):
+    def _get_preferable_tts_client(self):
         """
         Returns TTS client with highest priority.
 
         :return: Implementation of InterfaceTTSClient (actually, child of AbstractTTSClientDelegate).
         """
-        if self._config_tts['tts_engines']['cloud']['priority'] < \
-                self._config_tts['tts_engines']['onboard']['priority']:
-            return self._client_tts_cloud
-        elif self._config_tts['tts_engines']['cloud']['priority'] > \
-                self._config_tts['tts_engines']['onboard']['priority']:
+        if self._client_tts_preferable is None:
+            if self._config_tts['tts_engines']['cloud']['priority'] < \
+                    self._config_tts['tts_engines']['onboard']['priority']:
+                self._client_tts_preferable = self._client_tts_cloud
+            elif self._config_tts['tts_engines']['cloud']['priority'] > \
+                    self._config_tts['tts_engines']['onboard']['priority']:
+                self._client_tts_preferable = self._client_tts_onboard
+            else:  # for equal priorities prefer cloud method
+                self._client_tts_preferable = self._client_tts_cloud
+        return self._client_tts_preferable
+
+    def _get_unpreferable_tts_client(self):
+        """
+        Returns TTS client opposite to client with highest priority.
+
+        :return: Implementation of InterfaceTTSClient (actually, child of AbstractTTSClientDelegate).
+        """
+        if self._client_tts_preferable is None:
+            self._get_preferable_tts_client()
+
+        if isinstance(self._client_tts_preferable, TTSCloudClientDelegate):
             return self._client_tts_onboard
-        else:  # for equal priorities prefer cloud method
+        elif isinstance(self._client_tts_preferable, TTSOnboardClientDelegate):
             return self._client_tts_cloud
 
     def synthesise_audio(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
-        return self.get_preferable_tts_client().synthesise_audio(source_text)
+        str_path_file_audio = self._get_preferable_tts_client().synthesise_audio(source_text)
+        if str_path_file_audio is None:      # preferable TTS has not done job
+            return self._get_unpreferable_tts_client().synthesise_audio(source_text)
 
     def synthesise_speech(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
-        self.get_preferable_tts_client().synthesise_speech(source_text)
+        if self._get_preferable_tts_client().synthesise_speech(source_text):
+            return True
+        else:       # preferable TTS has not done job
+            return self._get_unpreferable_tts_client().synthesise_speech(source_text)
 
     def _validate_audio_file_format(self, str_format_file_audio):
         """
