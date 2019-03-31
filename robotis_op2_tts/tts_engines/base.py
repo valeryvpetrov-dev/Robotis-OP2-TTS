@@ -8,7 +8,7 @@ class AbstractTTSClient(InterfaceTTSClient):
         - Behaves like TTS client.
         - Should be used as parent of all TTS clients.
     """
-    _config_tts = None               # configuration of specific TTS cloud client
+    _config_tts = None               # configuration of specific TTS client
     _str_path_output_dir = None      # audio output directory
     _str_format_file_audio = None    # audio file format
 
@@ -70,8 +70,8 @@ class AbstractTTSClientDelegate(InterfaceTTSClient):
         - Behaves like TTS client.
         - Should be used as parent of all TTS client delegates.
     """
-    _config_tts = None              # configuration of specific TTS cloud client
-    _client_tts = None              # specific TTS cloud client
+    _config_tts = None              # configuration of specific TTS client
+    _client_tts = None              # specific TTS client
     _str_command_play_audio = None  # command to call audio player
 
     def __init__(self, dict_config):
