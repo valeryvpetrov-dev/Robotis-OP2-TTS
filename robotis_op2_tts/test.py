@@ -14,14 +14,14 @@ if __name__ == '__main__':
 
             optional arguments:
               -h, --help            show this help message and exit
-              -t TEXT, --text TEXT  text to synthesise speech.
-              -f FILE, --file FILE  path to text file with content to synthesise speech.
+              -t TEXT, --text TEXT  text to synthesize speech.
+              -f FILE, --file FILE  path to text file with content to synthesize speech.
               -c CONFIG, --config CONFIG
                                     path to TTS configuration file.
 
     3. Create RobotisOP2TTS object;
     4. Set TTS configuration to object;
-    4. Call synthesise_* method. Passed source of text will be caught automatically.
+    4. Call synthesize_* method. Passed source of text will be caught automatically.
     """
     # add path to current module to PYTHONPATH environment variable
     import sys
@@ -38,9 +38,9 @@ if __name__ == '__main__':
 
     if dict_args.get("text"):
         str_text = dict_args["text"]
-        str_path_file_audio = tts.synthesise_audio(str_text)
+        str_path_file_audio = tts.synthesize_audio(str_text)
         print("Client got audio: {}".format(str_path_file_audio))
     elif dict_args.get("file"):
         file_text = open(dict_args["file"], 'r')
-        tts.synthesise_speech(file_text)
+        tts.synthesize_speech(file_text)
         file_text.close()

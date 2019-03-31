@@ -41,7 +41,7 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         self._str_command_save_speech = self._config_tts['save']['command']\
             .replace("{expression}", str(self._config_tts['save']['expression']))
 
-    def synthesise_audio(self, source_text):
+    def synthesize_audio(self, source_text):
         """
         Implements corresponding method of interface parent class.
 
@@ -69,7 +69,7 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         else:
             return None
 
-    def synthesise_speech(self, source_text):
+    def synthesize_speech(self, source_text):
         """
         Implements corresponding method of interface parent class.
 
@@ -90,7 +90,7 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
             shell=True      # security hazard
         )
         if _int_code_result == 0:   # success
-            print('Speech was synthesised.')
+            print('Speech was synthesized.')
             return True
         else:
             return False

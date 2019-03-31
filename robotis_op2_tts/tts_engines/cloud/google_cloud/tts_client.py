@@ -52,7 +52,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         else:
             pass
 
-    def synthesise_audio(self, source_text):
+    def synthesize_audio(self, source_text):
         """
         Implements corresponding method of interface parent class.
 
@@ -101,7 +101,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         print('Audio file - {} was written.'.format(os.path.abspath(file_audio.name)))
         return str_path_file_audio
 
-    def synthesise_speech(self, source_text):
+    def synthesize_speech(self, source_text):
         """
         Implements corresponding method of interface parent class.
 

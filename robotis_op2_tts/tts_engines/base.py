@@ -46,7 +46,7 @@ class AbstractTTSClient(InterfaceTTSClient):
         """
         Returns path to audio file with source_text pronounced.
 
-        :param source_text: source text to synthesise speech.
+        :param source_text: source text to synthesize speech.
         :return: str - path to audio file.
         """
         from io import TextIOBase

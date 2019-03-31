@@ -30,17 +30,17 @@ class TTSOnboardClientDelegate(AbstractTTSClientDelegate, InterfaceTTSOnboardCli
             else:
                 continue  # skip information not about TTS clients
 
-    def synthesise_audio(self, source_text):
+    def synthesize_audio(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
-        return self._client_tts.synthesise_audio(source_text)
+        return self._client_tts.synthesize_audio(source_text)
 
-    def synthesise_speech(self, source_text):
+    def synthesize_speech(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
-        return self._client_tts.synthesise_speech(source_text)
+        return self._client_tts.synthesize_speech(source_text)
 
     def validate_configuration(self, dict_config):
         """

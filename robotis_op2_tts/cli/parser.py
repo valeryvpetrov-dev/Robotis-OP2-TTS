@@ -72,8 +72,8 @@ def parse_arguments():
 
     parser = argparse.ArgumentParser(description="Robotis OP2 Text-to-Speech (TTS) client. "
                                                  "To learn more visit: https://github.com/valera0798/Robotis-OP2-TTS")
-    parser.add_argument('-t', '--text', type=str, help="text to synthesise speech.")
-    parser.add_argument('-f', '--file', type=str, help="path to text file with content to synthesise speech.")
+    parser.add_argument('-t', '--text', type=str, help="text to synthesize speech.")
+    parser.add_argument('-f', '--file', type=str, help="path to text file with content to synthesize speech.")
     parser.add_argument('-c', '--config', type=str, help="path to TTS configuration file.")
     args = parser.parse_args()
 

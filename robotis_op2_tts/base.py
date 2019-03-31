@@ -4,7 +4,7 @@ class InterfaceTTSClient:
         - Declares interface of interaction with TTS client.
         - Should be used as parent of all TTS clients.
     """
-    def synthesise_audio(self, source_text):
+    def synthesize_audio(self, source_text):
         """
         Creates audio file with passed source_text spoken.
 
@@ -12,18 +12,18 @@ class InterfaceTTSClient:
         * Audio file format - .mp3.
         * File will be stored in ./data/audio directory.
 
-        :param source_text: string or file with text for synthesise.
-        :return: string - path to synthesised file.
+        :param source_text: string or file with text for synthesize.
+        :return: string - path to synthesized file.
         """
         pass
 
-    def synthesise_speech(self, source_text):
+    def synthesize_speech(self, source_text):
         """
         Speaks passed source_text in real time.
 
         * TTS synthesis method will be chosen by priority.
 
-        :param source_text: string or file with text for synthesise.
+        :param source_text: string or file with text for synthesize.
         :return: bool - indicator of succeeded synthesis.
         """
         pass

@@ -91,22 +91,22 @@ class RobotisOP2TTSClient(InterfaceTTSClient):
         elif isinstance(self._client_tts_preferable, TTSOnboardClientDelegate):
             return self._client_tts_cloud
 
-    def synthesise_audio(self, source_text):
+    def synthesize_audio(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
-        str_path_file_audio = self._get_preferable_tts_client().synthesise_audio(source_text)
+        str_path_file_audio = self._get_preferable_tts_client().synthesize_audio(source_text)
         if str_path_file_audio is None:      # preferable TTS has not done job
-            return self._get_unpreferable_tts_client().synthesise_audio(source_text)
+            return self._get_unpreferable_tts_client().synthesize_audio(source_text)
 
-    def synthesise_speech(self, source_text):
+    def synthesize_speech(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
-        if self._get_preferable_tts_client().synthesise_speech(source_text):
+        if self._get_preferable_tts_client().synthesize_speech(source_text):
             return True
         else:       # preferable TTS has not done job
-            return self._get_unpreferable_tts_client().synthesise_speech(source_text)
+            return self._get_unpreferable_tts_client().synthesize_speech(source_text)
 
     def _validate_audio_file_format(self, str_format_file_audio):
         """

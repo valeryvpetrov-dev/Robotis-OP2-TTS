@@ -34,21 +34,21 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
 
         self._config_tts.pop('audio_file_format', None)  # to not to duplicate data
 
-    def synthesise_audio(self, source_text):
+    def synthesize_audio(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
         if self.validate_network():
-            return self._client_tts.synthesise_audio(source_text)
+            return self._client_tts.synthesize_audio(source_text)
         else:
             return None
 
-    def synthesise_speech(self, source_text):
+    def synthesize_speech(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
         if self.validate_network():
-            str_path_file_audio = self._client_tts.synthesise_audio(source_text)
+            str_path_file_audio = self._client_tts.synthesize_audio(source_text)
             str_command_play_audio = self._str_command_play_audio.format(file=str_path_file_audio)
             str_output_command_play_audio = subprocess.check_output(str_command_play_audio.split(' '),
                                                                     stderr=subprocess.STDOUT).decode('utf-8')
