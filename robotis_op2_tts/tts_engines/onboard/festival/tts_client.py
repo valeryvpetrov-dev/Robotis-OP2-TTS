@@ -53,20 +53,21 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         from io import TextIOBase
         import subprocess
 
-        _str_path_file_audio = self._get_path_file_audio(source_text)
+        str_path_file_audio = self._get_path_file_audio(source_text)
 
         if isinstance(source_text, TextIOBase):     # if source_text is represented as file
             source_text = source_text.read()
 
         _int_code_result = subprocess.check_call(
-            self._str_command_save_speech.format(text=source_text, file=_str_path_file_audio),
+            self._str_command_save_speech.format(text=source_text, file=str_path_file_audio),
             stderr=subprocess.STDOUT,
             shell=True      # security hazard
         )
         if _int_code_result == 0:   # success
-            print('Audio file - {} was written.'.format(_str_path_file_audio))
-
-            return _str_path_file_audio
+            print('Audio file - {} was written.'.format(str_path_file_audio))
+            return str_path_file_audio
+        else:
+            return None
 
     def synthesise_speech(self, source_text):
         """
@@ -80,18 +81,19 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         from io import TextIOBase
         import subprocess
 
-        _str_path_file_audio = self._get_path_file_audio(source_text)
-
         if isinstance(source_text, TextIOBase):  # if source_text is represented as file
             source_text = source_text.read()
 
-        _str_output = subprocess.check_output(
+        _int_code_result = subprocess.check_call(
             self._str_command_play_speech.format(text=source_text),
             stderr=subprocess.STDOUT,
             shell=True      # security hazard
-        ).decode('utf-8')
-        print(_str_output)
-        return _str_path_file_audio
+        )
+        if _int_code_result == 0:   # success
+            print('Speech was synthesised.')
+            return True
+        else:
+            return False
 
     def _validate_availability(self, dict_config):
         """

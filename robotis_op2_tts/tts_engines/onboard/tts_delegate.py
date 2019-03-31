@@ -40,7 +40,7 @@ class TTSOnboardClientDelegate(AbstractTTSClientDelegate, InterfaceTTSOnboardCli
         """
         Implements corresponding method of interface parent class.
         """
-        self._client_tts.synthesise_speech(source_text)
+        return self._client_tts.synthesise_speech(source_text)
 
     def validate_configuration(self, dict_config):
         """

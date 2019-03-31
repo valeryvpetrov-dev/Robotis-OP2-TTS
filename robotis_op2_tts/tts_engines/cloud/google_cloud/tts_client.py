@@ -69,8 +69,8 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
                 * Description: https://cloud.google.com/text-to-speech/docs/reference/rpc/google.cloud.texttospeech.v1beta1#audioconfig
         """
         # creates audio file corresponding to source text
-        _str_path_file_audio = self._get_path_file_audio(source_text)
-        file_audio = open(_str_path_file_audio, 'wb')
+        str_path_file_audio = self._get_path_file_audio(source_text)
+        file_audio = open(str_path_file_audio, 'wb')
 
         if isinstance(source_text, TextIOBase):  # if source_text is represented as file
             source_text = source_text.read()
@@ -99,7 +99,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         file_audio.write(response.audio_content)
 
         print('Audio file - {} was written.'.format(os.path.abspath(file_audio.name)))
-        return _str_path_file_audio
+        return str_path_file_audio
 
     def synthesise_speech(self, source_text):
         """
@@ -189,14 +189,17 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         if self._speedTest is None:
             self._speedTest = SpeedTest(host=self._config_tts['network']['test_download_destination'], runs=2)
 
-        # returns latency in ms
-        float_latency = self._speedTest.ping(self._config_tts['network']['test_ping_destination'])
-        if float_latency > self.FLOAT_LATENCY_MAX:
-            raise NetworkNotAccessibleException()
+        try:
+            # returns latency in ms
+            float_latency = self._speedTest.ping(self._config_tts['network']['test_ping_destination'])
+            if float_latency > self.FLOAT_LATENCY_MAX:
+                raise NetworkNotAccessibleException()
 
-        # returns download speed in bits/sec
-        float_download_speed = self._speedTest.download()
-        if float_download_speed < self.FLOAT_SPEED_DOWNLOAD_MIN:
-            raise NetworkSpeedNotApplicableException()
+            # returns download speed in bits/sec
+            float_download_speed = self._speedTest.download()
+            if float_download_speed < self.FLOAT_SPEED_DOWNLOAD_MIN:
+                raise NetworkSpeedNotApplicableException()
+        except Exception as e:  # connection to Internet is not established
+            return False
 
         return True

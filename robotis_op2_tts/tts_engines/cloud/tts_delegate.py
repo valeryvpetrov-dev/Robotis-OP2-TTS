@@ -40,6 +40,8 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         """
         if self.validate_network():
             return self._client_tts.synthesise_audio(source_text)
+        else:
+            return None
 
     def synthesise_speech(self, source_text):
         """
@@ -51,6 +53,9 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
             str_output_command_play_audio = subprocess.check_output(str_command_play_audio.split(' '),
                                                                     stderr=subprocess.STDOUT).decode('utf-8')
             print(str_output_command_play_audio)
+            return True
+        else:
+            return False
 
     def validate_configuration(self, dict_config):
         """

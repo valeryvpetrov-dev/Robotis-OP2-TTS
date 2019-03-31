@@ -24,7 +24,7 @@ class InterfaceTTSClient:
         * TTS synthesis method will be chosen by priority.
 
         :param source_text: string or file with text for synthesise.
-        :return: None (speech will be pronounced).
+        :return: bool - indicator of succeeded synthesis.
         """
         pass
 
