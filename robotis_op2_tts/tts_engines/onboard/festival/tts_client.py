@@ -54,9 +54,11 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         import subprocess
 
         str_path_file_audio = self._get_path_file_audio(source_text)
+        self.logger.debug("Speech will be written to %s.", str_path_file_audio)
 
         if isinstance(source_text, TextIOBase):     # if source_text is represented as file
             source_text = source_text.read()
+            self.logger.debug("Source text is represented as file, read content.")
 
         _int_code_result = subprocess.check_call(
             self._str_command_save_speech.format(text=source_text, file=str_path_file_audio),
@@ -64,9 +66,10 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
             shell=True      # security hazard
         )
         if _int_code_result == 0:   # success
-            print('Audio file - {} was written.'.format(str_path_file_audio))
+            self.logger.debug("Synthesized speech is writen to file.")
             return str_path_file_audio
         else:
+            self.logger.debug("Speech is not synthesized to file.")
             return None
 
     def synthesize_speech(self, source_text):
@@ -83,6 +86,7 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
 
         if isinstance(source_text, TextIOBase):  # if source_text is represented as file
             source_text = source_text.read()
+            self.logger.debug("Source text is represented as file, read content.")
 
         _int_code_result = subprocess.check_call(
             self._str_command_play_speech.format(text=source_text),
@@ -90,9 +94,10 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
             shell=True      # security hazard
         )
         if _int_code_result == 0:   # success
-            print('Speech was synthesized.')
+            self.logger.debug("Speech is synthesized.")
             return True
         else:
+            self.logger.debug("Speech is not synthesized.")
             return False
 
     def _validate_availability(self, dict_config):
@@ -106,8 +111,10 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         """
         import subprocess
 
-        if len(subprocess.check_output(["which", "festival"])) == 0:
+        _str_output = subprocess.check_output(["which", "festival"])
+        if len(_str_output) == 0:
             raise FestivalNotAvailableException()
+        self.logger.debug("Festival is available at %s.", _str_output)
         return True
 
     def _validate_language_support(self, dict_config):
@@ -129,8 +136,13 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         _str_name_language = dict_config['play']['call_params']['--language']
         for _str_name_file in listdir(_str_path_dir_share_festival_languages):
             if _str_name_language in _str_name_file:        # check all files that corresponds to language
-                if stat(_str_path_dir_share_festival_languages + _str_name_file).st_size == 0:  # file is emtpy
+                _str_path_file_language = _str_path_dir_share_festival_languages + _str_name_file
+                if stat(_str_path_file_language).st_size == 0:  # file is emtpy
                     raise LanguageNotSupportedException(_str_name_language)
+                else:
+                    self.logger.debug("%s language settings file = %s.",
+                                      _str_name_language, _str_path_file_language)
+        self.logger.debug("%s language is supported.", _str_name_language)
         return True
 
     def validate_configuration(self, dict_config):
@@ -145,7 +157,13 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
             - Passed language has support in festival.
         """
         try:
-            return self._validate_availability(dict_config) and \
+            bool_result = self._validate_availability(dict_config) and \
                    self._validate_language_support(dict_config)
+            if bool_result:
+                self.logger.info("Specific validation of configuration succeeds.")
+            else:
+                self.logger.info("Specific validation of configuration fails.")
+            return bool_result
         except RobotisOP2TTSException as e:
-            exit(str(e))
+            self.logger.error(msg=str(e), exc_info=True)
+            exit()

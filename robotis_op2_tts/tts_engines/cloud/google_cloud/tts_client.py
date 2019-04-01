@@ -25,7 +25,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
     FLOAT_SPEED_DOWNLOAD_MIN = 40960    # 5 Kbytes/s * 1024 * 8 -> bits/sec
 
     _client_tts = None                                          # Google Cloud TTS client
-    _speedTest = None  # instance of speed test validator
+    _speed_test = None  # instance of speed test validator
 
     def set_configuration(self, dict_config):
         """
@@ -45,12 +45,15 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         :param str_format_file_audio: string - audio file format.
         :return: texttospeech.enums.AudioEncoding value.
         """
+        enum_audio_encoding = None
         if str_format_file_audio == 'mp3':
-            return texttospeech.enums.AudioEncoding.MP3
+            enum_audio_encoding = texttospeech.enums.AudioEncoding.MP3
         elif str_format_file_audio == 'ogg':
-            return texttospeech.enums.AudioEncoding.OGG_OPUS
+            enum_audio_encoding = texttospeech.enums.AudioEncoding.OGG_OPUS
         else:
             pass
+        self.logger.debug("Convert result: %s to %s", str_format_file_audio, enum_audio_encoding)
+        return enum_audio_encoding
 
     def synthesize_audio(self, source_text):
         """
@@ -71,9 +74,11 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         # creates audio file corresponding to source text
         str_path_file_audio = self._get_path_file_audio(source_text)
         file_audio = open(str_path_file_audio, 'wb')
+        self.logger.debug("Speech will be written to %s.", str_path_file_audio)
 
         if isinstance(source_text, TextIOBase):  # if source_text is represented as file
             source_text = source_text.read()
+            self.logger.debug("Source text is represented as file, read content.")
 
         # set the text input to be synthesized
         synthesis_input = texttospeech.types.SynthesisInput(text=source_text)
@@ -82,6 +87,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         voice = texttospeech.types.VoiceSelectionParams(
             language_code=self._config_tts['call_params']['language_code'],
             name=self._config_tts['call_params']['name'])
+        self.logger.debug("Voice params: \n%s", voice)
 
         # select the type of audio file you want returned
         audio_config = texttospeech.types.AudioConfig(
@@ -90,15 +96,17 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
             pitch=self._config_tts['call_params']['pitch'],
             effects_profile_id=self._config_tts['call_params']['effects_profile_id']
         )
+        self.logger.debug("Audio params: \n%s", audio_config)
 
         # perform the text-to-speech request on the text input with the selected voice parameters and audio file type
         # the response's audio_content is binary
         response = self._client_tts.synthesize_speech(synthesis_input, voice, audio_config)
+        self.logger.debug("Response is gotten.")
 
         # write the response to the output file
         file_audio.write(response.audio_content)
+        self.logger.debug("Response is writen to file.")
 
-        print('Audio file - {} was written.'.format(os.path.abspath(file_audio.name)))
         return str_path_file_audio
 
     def synthesize_speech(self, source_text):
@@ -120,8 +128,10 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         :param dict_config: configuration of Google Cloud TTS.
         :return: bool - true (valid) / false (invalid).
         """
-        if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") is None:
+        _str_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+        if _str_path is None:
             raise GoogleApplicationCredentialsNotProvided()
+        self.logger.debug("Configuration file location: %s", _str_path)
         return True
 
     def _validate_call_params(self, dict_config):
@@ -136,6 +146,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         for _str_name_param_call, _value in dict_config['call_params'].items():
             if _str_name_param_call not in self.LIST_CALL_PARAMS_REQUIRED or _value is None:
                 raise CallParamNotFoundException()
+        self.logger.debug("Required call params are provided.")
         return True
 
     def _validate_network_params(self, dict_config):
@@ -150,6 +161,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         for _str_name_param_call, _value in dict_config['network'].items():
             if _str_name_param_call not in self.LIST_NETWORK_PARAMS_REQUIRED or _value is None:
                 raise NetworkParamNotFoundException()
+        self.logger.debug("Required network params are provided.")
         return True
 
     def validate_configuration(self, dict_config):
@@ -165,11 +177,17 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
             - Network params are provided.
         """
         try:
-            return self._validate_enviroment_variable(dict_config) and \
+            bool_result = self._validate_enviroment_variable(dict_config) and \
                    self._validate_call_params(dict_config) and \
                    self._validate_network_params(dict_config)
+            if bool_result:
+                self.logger.info("Specific validation of configuration succeeds.")
+            else:
+                self.logger.info("Specific validation of configuration fails.")
+            return bool_result
         except RobotisOP2TTSException as e:
-            exit(str(e))
+            self.logger.error(msg=str(e), exc_info=True)
+            exit()
 
     def validate_network(self):
         """
@@ -186,20 +204,25 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         """
         from pyspeedtest import SpeedTest
 
-        if self._speedTest is None:
-            self._speedTest = SpeedTest(host=self._config_tts['network']['test_download_destination'], runs=2)
+        if self._speed_test is None:
+            self._speed_test = SpeedTest(host=self._config_tts['network']['test_download_destination'], runs=2)
 
+        self.logger.debug("SpeedTest instance is ready.")
         try:
             # returns latency in ms
-            float_latency = self._speedTest.ping(self._config_tts['network']['test_ping_destination'])
+            float_latency = self._speed_test.ping(self._config_tts['network']['test_ping_destination'])
             if float_latency > self.FLOAT_LATENCY_MAX:
                 raise NetworkNotAccessibleException()
+            self.logger.debug("Ping latency = %s, ms", float_latency)
 
             # returns download speed in bits/sec
-            float_download_speed = self._speedTest.download()
+            float_download_speed = self._speed_test.download()
             if float_download_speed < self.FLOAT_SPEED_DOWNLOAD_MIN:
                 raise NetworkSpeedNotApplicableException()
+            self.logger.debug("Download speed = %s, bits/sec", float_download_speed)
         except Exception as e:  # connection to Internet is not established
+            self.logger.warn("No access to Internet.")
             return False
 
+        self.logger.debug("Network validation succeeds.")
         return True
