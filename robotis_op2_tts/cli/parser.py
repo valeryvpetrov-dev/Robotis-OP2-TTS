@@ -56,6 +56,17 @@ def validate_text_source(args):
     logger.info("Text to speech was provided.")
 
 
+def validate_operation(args):
+    """
+    ""
+    Validates operation to do with passed text source.
+
+    :param args: parsed arguments.
+    :return: None (args can be modified).
+    """
+    return True
+
+
 def parse_arguments():
     """
     Parses program input arguments to dict.
@@ -75,14 +86,19 @@ def parse_arguments():
 
     parser = argparse.ArgumentParser(description="Robotis OP2 Text-to-Speech (TTS) client. "
                                                  "To learn more visit: https://github.com/valera0798/Robotis-OP2-TTS")
+    parser.add_argument('operation', type=str, choices=["play", "save"],
+                        default="play",     # default choice
+                        nargs='?',          # allows not to provide value, default will be used
+                        help="operation to do with passed text source.")
     parser.add_argument('-t', '--text', type=str, help="text to synthesize speech.")
     parser.add_argument('-f', '--file', type=str, help="path to text file with content to synthesize speech.")
     parser.add_argument('-c', '--config', type=str, help="path to TTS configuration file.")
     args = parser.parse_args()
 
     try:
-        validate_configuration_file_path(args)
         validate_text_source(args)
+        validate_configuration_file_path(args)
+        validate_operation(args)
     except RobotisOP2TTSException as e:
         logger.error(msg=str(e), exc_info=True)
         exit()
