@@ -39,7 +39,6 @@ if __name__ == '__main__':
     if dict_args.get("text"):
         str_text = dict_args["text"]
         str_path_file_audio = tts.synthesize_audio(str_text)
-        print("Client got audio: {}".format(str_path_file_audio))
     elif dict_args.get("file"):
         file_text = open(dict_args["file"], 'r')
         tts.synthesize_speech(file_text)

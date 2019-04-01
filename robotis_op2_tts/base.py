@@ -45,11 +45,13 @@ class LoggableInterface:
         - Declares abstract structure of loggable class.
         - Should be used as parent of all classes that needs in logging facilities.
     """
+    from logging import DEBUG, INFO
+
     logger = None                   # logger instance that provides logging interface
     _console_handler = None         # console logs handler
     _console_formatter = None       # console logs formatter
 
-    def __init__(self) -> None:
+    def __init__(self, name, level=INFO) -> None:
         super().__init__()
 
         import logging
@@ -60,12 +62,13 @@ class LoggableInterface:
         root.setLevel(logging.DEBUG)
 
         # create specific logger for heir
-        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger = logging.getLogger(name)
         # adjust handler to redirect logs to stdout
         self.console_handler = logging.StreamHandler(stdout)
-        self.console_handler.setLevel(logging.DEBUG)
+        self.console_handler.setLevel(level)
         # adjust LogRecord format
-        self.console_formatter = logging.Formatter("%(asctime)s - %(process)d:%(name)s - %(levelname)s:%(message)s")
+        self.console_formatter = logging.Formatter("[%(asctime)s] [%(process)d:%(name)25s] [%(levelname)8s] "
+                                                   "--- %(message)s (%(filename)s:%(lineno)s)")
         self.console_handler.setFormatter(self.console_formatter)
         # bind handler with logger
         self.logger.addHandler(self.console_handler)
