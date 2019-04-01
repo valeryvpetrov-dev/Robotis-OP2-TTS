@@ -1,13 +1,13 @@
 if __name__ == '__main__':
     """
-    Example of using Robotis OP2 Text-to-Speech (TTS) client.
+    Robotis OP2 Text-to-Speech (TTS) client general usage script.
 
     1. Create TTS configuration and place it inside ./config;
     2. Pass path to configuration file and text (string or file) as params to program;
         You can get support:
 
-            $ python tts_client.py -h
-            usage: tts_client.py [-h] [-t TEXT] [-f FILE] [-c CONFIG]
+            $ python tts.py -h
+            usage: tts.py [-h] [-t TEXT] [-f FILE] [-c CONFIG]
 
             Robotis OP2 Text-to-Speech (TTS) client. To learn more visit:
             https://github.com/valera0798/Robotis-OP2-TTS
@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     3. Create RobotisOP2TTS object;
     4. Set TTS configuration to object;
-    4. Call synthesize_* method. Passed source of text will be caught automatically.
+    4. Call synthesize_* method. Passed source of text will be handled automatically.
     """
     # add path to current module to PYTHONPATH environment variable
     import sys
@@ -38,8 +38,14 @@ if __name__ == '__main__':
 
     if dict_args.get("text"):
         str_text = dict_args["text"]
-        str_path_file_audio = tts.synthesize_audio(str_text)
+        if dict_args.get("operation") == "play":
+            tts.synthesize_speech(str_text)
+        elif dict_args.get("operation") == "save":
+            str_path_file_audio = tts.synthesize_audio(str_text)
     elif dict_args.get("file"):
         file_text = open(dict_args["file"], 'r')
-        tts.synthesize_speech(file_text)
+        if dict_args.get("operation") == "play":
+            tts.synthesize_speech(file_text)
+        elif dict_args.get("operation") == "save":
+            str_path_file_audio = tts.synthesize_audio(file_text)
         file_text.close()
