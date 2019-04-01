@@ -19,8 +19,9 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
 
         :param dict_config: configuration of TTS client.
         """
-        super().__init__()
+        super().__init__(name=self.__class__.__name__)
         self.set_configuration(dict_config)
+        self.logger.debug("Instance initialization succeeds.")
 
     def set_configuration(self, dict_config):
         """
@@ -37,10 +38,14 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
             dict_config.pop('audio_file_format', None)                          # to not to duplicate data
             self._config_tts = dict_config
 
-            self._str_path_output_dir = abspath(self._str_path_output_dir)  # creates audio output directory
+            self._str_path_output_dir = abspath(self._str_path_output_dir)      # creates audio output directory
             try:
                 makedirs(self._str_path_output_dir)
+                self.logger.debug("Output audio directory is created. Output directory path = %s",
+                                  self._str_path_output_dir)
             except FileExistsError:
+                self.logger.debug("Output audio directory is already exists. Output directory path = %s",
+                                  self._str_path_output_dir)
                 pass
 
     def _get_path_file_audio(self, source_text):
@@ -61,6 +66,7 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
         _str_name_file_audio = "{name}.{extension}".format(name=_str_name_file_audio,
                                                            extension=self._str_format_file_audio)
         str_path_file_audio = join(self._str_path_output_dir, _str_name_file_audio)
+        self.logger.debug("Audio file path = %s", str_path_file_audio)
         return str_path_file_audio
 
 
@@ -82,8 +88,9 @@ class AbstractTTSClientDelegate(InterfaceTTSClient, LoggableInterface):
 
         :param dict_config: configuration of TTS client.
         """
-        super().__init__()
+        super().__init__(name=self.__class__.__name__)
         self.set_configuration(dict_config)
+        self.logger.debug("Instance initialization succeeds.")
 
     def set_configuration(self, dict_config):
         """
