@@ -9,6 +9,24 @@ class ConfigurationFileNotFoundException(RobotisOP2TTSException):
         super().__init__("Configuration file was not found.")
 
 
+class ConfigurationFileEmptyException(RobotisOP2TTSException):
+    """
+    Configuration file empty exception class.
+    """
+    def __init__(self) -> None:
+        super().__init__("Configuration file is empty.")
+
+
+class ConfigurationFileWrongFormatException(RobotisOP2TTSException):
+    """
+    Configuration file wrong format exception class.
+        - Non-json.
+    """
+    def __init__(self, str_format_file_config) -> None:
+        super().__init__("Configuration file has wrong format. Required - JSON, got - {}."
+                         .format(str_format_file_config))
+
+
 class SourceTextFileNotFoundException(RobotisOP2TTSException):
     """
     Source text file not found exception class.
