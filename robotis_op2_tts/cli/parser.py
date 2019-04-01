@@ -24,7 +24,13 @@ def validate_configuration_file_path(args):
     logger.info("Configuration file path = {}".format(args.config))
     if args.config:
         if os.path.isfile(args.config):
-            logger.info("Configuration file was found.")
+            if args.config.endswith(".json"):
+                if os.stat(args.config).st_size > 0:
+                    logger.info("Configuration file was found.")
+                else:
+                    raise ConfigurationFileEmptyException()
+            else:
+                raise ConfigurationFileWrongFormatException(args.config.split(".")[-1])
         else:
             raise ConfigurationFileNotFoundException()
 
