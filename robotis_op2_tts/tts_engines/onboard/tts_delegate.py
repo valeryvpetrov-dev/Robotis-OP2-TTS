@@ -34,12 +34,14 @@ class TTSOnboardClientDelegate(AbstractTTSClientDelegate, InterfaceTTSOnboardCli
         """
         Implements corresponding method of interface parent class.
         """
+        self.logger.debug("It redirects call to %s.", self._client_tts)
         return self._client_tts.synthesize_audio(source_text)
 
     def synthesize_speech(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
+        self.logger.debug("It redirects call to %s.", self._client_tts)
         return self._client_tts.synthesize_speech(source_text)
 
     def validate_configuration(self, dict_config):
@@ -49,4 +51,9 @@ class TTSOnboardClientDelegate(AbstractTTSClientDelegate, InterfaceTTSOnboardCli
         * If TTS onboard client configurations have something in common than method should be implemented.
         * For free format configuration there is no necessity to do general validation.
         """
-        return True
+        bool_result = True
+        if bool_result:
+            self.logger.debug("Configuration validation succeeds.")
+        else:
+            self.logger.debug("Configuration validation fails.")
+        return bool_result

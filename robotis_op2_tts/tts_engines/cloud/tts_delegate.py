@@ -39,7 +39,9 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         Implements corresponding method of interface parent class.
         """
         if self.validate_network():
-            return self._client_tts.synthesize_audio(source_text)
+            self.logger.debug("It redirects call to %s.", self._client_tts)
+            str_file_audio = self._client_tts.synthesize_audio(source_text)
+            return str_file_audio
         else:
             return None
 
@@ -48,11 +50,13 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         Implements corresponding method of interface parent class.
         """
         if self.validate_network():
+            self.logger.debug("It redirects call to %s.", self._client_tts)
             str_path_file_audio = self._client_tts.synthesize_audio(source_text)
             str_command_play_audio = self._str_command_play_audio.format(file=str_path_file_audio)
+            self.logger.debug("It calls audio player to play audio.")
             str_output_command_play_audio = subprocess.check_output(str_command_play_audio.split(' '),
                                                                     stderr=subprocess.STDOUT).decode('utf-8')
-            print(str_output_command_play_audio)
+            self.logger.debug("\n" + str_output_command_play_audio)
             return True
         else:
             return False
@@ -64,10 +68,16 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         * If TTS cloud client configurations have something in common than method should be implemented.
         * For free format configuration there is no necessity to do general validation.
         """
-        return True
+        bool_result = True
+        if bool_result:
+            self.logger.debug("Configuration validation succeeds.")
+        else:
+            self.logger.debug("Configuration validation fails.")
+        return bool_result
 
     def validate_network(self):
         """
         Implements corresponding method of interface parent class.
         """
+        self.logger.debug("It redirects call to %s", self._client_tts)
         return self._client_tts.validate_network()
