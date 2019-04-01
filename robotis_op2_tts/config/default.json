@@ -1,8 +1,8 @@
 {
   "audio_file_format": "mp3",
   "audio_file_player": {
-    "name": "aplay",
-    "command": "aplay {file}"
+    "name": "mpg123",
+    "command": "mpg123 {file}"
   },
   "tts_engines": {
     "cloud": {
@@ -10,10 +10,10 @@
       "google_cloud_tts": {
         "call_params": {
           "language_code": "ru-RU",
-          "name": "ru-RU-Wavenet-B",
-          "speaking_rate": 0.9,
-          "pitch": 6.0,
-          "effects_profile_id": ["telephony-class-application"]
+          "name": "ru-RU-Wavenet-A",
+          "speaking_rate": 0.85,
+          "pitch": 4.0,
+          "effects_profile_id": ["large-home-entertainment-class-device"]
         },
         "network": {
           "test_ping_destination": "cloud.google.com",
