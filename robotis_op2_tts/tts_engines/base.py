@@ -59,10 +59,13 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
         from os.path import basename, join
 
         # creates audio file corresponding to source text
-        if isinstance(source_text, TextIOBase):         # if source_text is represented as file
+        if isinstance(source_text, TextIOBase):             # if source_text is represented as file
             _str_name_file_audio = basename(source_text.name).split(".")[0]
-        else:                                           # if source_text is represented as string
-            _str_name_file_audio = source_text[:10]  # first 10 character from string
+        else:                                               # if source_text is represented as string
+            if len(source_text) < 10:
+                _str_name_file_audio = source_text          # full string
+            else:
+                _str_name_file_audio = source_text[:10]     # first 10 character from string
         _str_name_file_audio = "{name}.{extension}".format(name=_str_name_file_audio,
                                                            extension=self._str_format_file_audio)
         str_path_file_audio = join(self._str_path_output_dir, _str_name_file_audio)
