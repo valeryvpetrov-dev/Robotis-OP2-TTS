@@ -57,7 +57,11 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         self.logger.debug("Speech will be written to %s.", str_path_file_audio)
 
         if isinstance(source_text, TextIOBase):     # if source_text is represented as file
-            source_text = source_text.read()
+            try:
+                source_text = source_text.read()
+            except UnicodeDecodeError as e:
+                self.logger.error(msg=str(e), exc_info=True)
+                exit()
             self.logger.debug("Source text is represented as file, read content.")
 
         _int_code_result = subprocess.check_call(
@@ -85,7 +89,11 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         import subprocess
 
         if isinstance(source_text, TextIOBase):  # if source_text is represented as file
-            source_text = source_text.read()
+            try:
+                source_text = source_text.read()
+            except UnicodeDecodeError as e:
+                self.logger.error(msg=str(e), exc_info=True)
+                exit()
             self.logger.debug("Source text is represented as file, read content.")
 
         _int_code_result = subprocess.check_call(
