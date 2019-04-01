@@ -1,12 +1,13 @@
-from base import InterfaceTTSClient
+from base import InterfaceTTSClient, LoggableInterface
 
 
-class AbstractTTSClient(InterfaceTTSClient):
+class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
     """
     Abstract TTS client class.
         - Declares abstract structure of TTS client.
         - Behaves like TTS client.
         - Should be used as parent of all TTS clients.
+        - Supports logging feature.
     """
     _config_tts = None               # configuration of specific TTS client
     _str_path_output_dir = None      # audio output directory
@@ -63,12 +64,13 @@ class AbstractTTSClient(InterfaceTTSClient):
         return str_path_file_audio
 
 
-class AbstractTTSClientDelegate(InterfaceTTSClient):
+class AbstractTTSClientDelegate(InterfaceTTSClient, LoggableInterface):
     """
     Abstract TTS client delegate class.
         - Declares abstract structure of TTS client delegates.
         - Behaves like TTS client.
         - Should be used as parent of all TTS client delegates.
+        - Supports logging feature.
     """
     _config_tts = None              # configuration of specific TTS client
     _client_tts = None              # specific TTS client

@@ -1,4 +1,4 @@
-from base import InterfaceTTSClient
+from base import InterfaceTTSClient, LoggableInterface
 from exceptions.base import RobotisOP2TTSException
 from exceptions.config import AudioFileFormatException, AudioFilePlayerException, \
             TTSEnginesPriorityNotProvidedException, TTSEnginesNotProvidedException
@@ -6,10 +6,11 @@ from tts_engines.cloud.tts_delegate import TTSCloudClientDelegate
 from tts_engines.onboard.tts_delegate import TTSOnboardClientDelegate
 
 
-class RobotisOP2TTSClient(InterfaceTTSClient):
+class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
     """
     Robotis OP 2 Text-to-Speech (TTS) client class.
         - Behaves like InterfaceTTSClient.
+        - Supports logging feature.
     """
     _config_tts = None              # general configuration of Robotis OP2 TTS.
     _client_tts_cloud = None        # TTS cloud client
