@@ -25,8 +25,9 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
         2. Processes passed configuration.
         3. Interacts .
         """
-        super().__init__()
+        super().__init__(name=self.__class__.__name__)
         self.set_configuration(str_path_file_config)
+        self.logger.info("Instance initialization succeeds.")
 
     def set_configuration(self, str_path_file_config):
         """
@@ -43,6 +44,7 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
         from config.parser import parse_configuration
 
         dict_config_tts = parse_configuration(str_path_file_config)
+        self.logger.debug("Configuration is parsed.")
         if self.validate_configuration(dict_config_tts):
             self._config_tts = dict_config_tts
 
@@ -60,6 +62,7 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
                 dict_config_onboard_tts['audio_file_format'] = self._config_tts['audio_file_format']
                 dict_config_onboard_tts['audio_file_player'] = self._config_tts['audio_file_player']
                 self._client_tts_onboard = TTSOnboardClientDelegate(dict_config_onboard_tts)
+            self.logger.debug("All TTS client delegates are initialized.")
 
     def _get_preferable_tts_client(self):
         """
@@ -76,6 +79,7 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
                 self._client_tts_preferable = self._client_tts_onboard
             else:  # for equal priorities prefer cloud method
                 self._client_tts_preferable = self._client_tts_cloud
+        self.logger.debug("%s is chosen as preferable.", self._client_tts_preferable)
         return self._client_tts_preferable
 
     def _get_unpreferable_tts_client(self):
@@ -88,26 +92,43 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
             self._get_preferable_tts_client()
 
         if isinstance(self._client_tts_preferable, TTSCloudClientDelegate):
+            self.logger.debug("%s is chosen as unpreferable.", self._client_tts_onboard)
             return self._client_tts_onboard
         elif isinstance(self._client_tts_preferable, TTSOnboardClientDelegate):
+            self.logger.debug("%s is chosen as unpreferable.", self._client_tts_cloud)
             return self._client_tts_cloud
 
     def synthesize_audio(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
-        str_path_file_audio = self._get_preferable_tts_client().synthesize_audio(source_text)
+        _tts_client_preferable = self._get_preferable_tts_client()
+        self.logger.debug("It redirects call to %s", _tts_client_preferable)
+        str_path_file_audio = _tts_client_preferable.synthesize_audio(source_text)
         if str_path_file_audio is None:      # preferable TTS has not done job
-            return self._get_unpreferable_tts_client().synthesize_audio(source_text)
+            self.logger.info("%s does not succeed audio synthesis, now it tries another TTS.",
+                             self._client_tts_preferable.__class__.__name__)
+            _tts_client_unpreferable = self._get_unpreferable_tts_client()
+            self.logger.debug("It redirects call to %s", _tts_client_unpreferable)
+            return _tts_client_unpreferable.synthesize_audio(source_text)    # ! loop
+        self.logger.info("Audio synthesis succeeds. Output file path = %s", str_path_file_audio)
+        return str_path_file_audio
 
     def synthesize_speech(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
-        if self._get_preferable_tts_client().synthesize_speech(source_text):
+        _tts_client_preferable = self._get_preferable_tts_client()
+        self.logger.debug("It redirects call to %s", _tts_client_preferable)
+        if _tts_client_preferable.synthesize_speech(source_text):
+            self.logger.info("Speech synthesis succeeds. You can hear it.")
             return True
         else:       # preferable TTS has not done job
-            return self._get_unpreferable_tts_client().synthesize_speech(source_text)
+            self.logger.info("%s does not succeed speech synthesis, now it tries another TTS.",
+                             self._client_tts_preferable.__class__.__name__)
+            _tts_client_unpreferable = self._get_unpreferable_tts_client()
+            self.logger.debug("It redirects call to %s", _tts_client_unpreferable)
+            return _tts_client_unpreferable.synthesize_speech(source_text)   # ! loop
 
     def _validate_audio_file_format(self, str_format_file_audio):
         """
@@ -126,6 +147,7 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
         LIST_AVAILABLE_AUDIO_FORMAT = ["mp3", "wav", "ogg", "gsm", "dct", "au", "aiff", "flac", "vox", "raw"]
 
         if str_format_file_audio in LIST_AVAILABLE_AUDIO_FORMAT:
+            self.logger.debug("%s audio file format is valid.", str_format_file_audio)
             return True
         else:
             raise AudioFileFormatException()
@@ -144,7 +166,9 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
         """
         import subprocess
 
-        if len(subprocess.check_output(["which", dict_audio_file_player_config["name"]])) > 0:
+        str_name_audio_file_player = dict_audio_file_player_config["name"]
+        if len(subprocess.check_output(["which", str_name_audio_file_player])) > 0:
+            self.logger.debug("%s audio file player is available.", str_name_audio_file_player)
             return True
         else:
             raise AudioFilePlayerException()
@@ -176,6 +200,7 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
         except KeyError:  # if configuration for TTS synthesis method is not provided
             pass
 
+        self.logger.debug("All TTS engines provides priority.")
         return True
 
     def _validate_tts_engines(self, dict_engines_tts):
@@ -206,8 +231,14 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
         Validates configuration superficially. TTS clients details will not be touched.
         """
         try:
-            return self._validate_audio_file_format(dict_config["audio_file_format"]) and \
+            bool_result = self._validate_audio_file_format(dict_config["audio_file_format"]) and \
                    self._validate_audio_file_player(dict_config["audio_file_player"]) and \
                    self._validate_tts_engines(dict_config["tts_engines"])
+            if bool_result:
+                self.logger.info("Superficial validation of configuration succeeds.")
+            else:
+                self.logger.info("Superficial validation of configuration fails.")
+            return bool_result
         except RobotisOP2TTSException as e:
-            exit(str(e))
+            self.logger.error(msg=str(e), exc_info=True)
+            exit()
