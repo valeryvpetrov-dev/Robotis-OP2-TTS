@@ -1,6 +1,9 @@
 import os
 from sys import exit
 from exceptions.cli import *
+from base import LoggableInterface
+
+logger = LoggableInterface(name=__name__).logger     # logger instance
 
 
 def validate_configuration_file_path(args):
@@ -15,13 +18,13 @@ def validate_configuration_file_path(args):
     :return: None (args can be modified).
     """
     if not args.config:
-        print("There is no passed path to configuration file. Default one will be used.")
+        logger.info("There is no passed path to configuration file. Default one will be used.")
         args.config = os.path.abspath("./config/default.json")
 
-    print("Configuration file path = {}".format(args.config))
+    logger.info("Configuration file path = {}".format(args.config))
     if args.config:
         if os.path.isfile(args.config):
-            print("Configuration file was found.")
+            logger.info("Configuration file was found.")
         else:
             raise ConfigurationFileNotFoundException()
 
@@ -43,14 +46,14 @@ def validate_text_source(args):
     if args.text and args.file:
         raise SeveralSourceTextsException()
     elif args.file:
-        print("Text file path = {}".format(args.file))
+        logger.info("Text file path = {}".format(args.file))
         if os.path.isfile(args.file):
-            print("Text file was found.")
+            logger.info("Text file was found.")
         else:
             raise SourceTextFileNotFoundException()
     elif args.text:
         pass
-    print("Text to speech was provided.")
+    logger.info("Text to speech was provided.")
 
 
 def parse_arguments():
@@ -81,6 +84,7 @@ def parse_arguments():
         validate_configuration_file_path(args)
         validate_text_source(args)
     except RobotisOP2TTSException as e:
-        exit(str(e))
+        logger.error(msg=str(e), exc_info=True)
+        exit()
 
     return vars(args)
