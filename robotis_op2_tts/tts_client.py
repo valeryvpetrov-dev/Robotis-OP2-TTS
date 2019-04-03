@@ -1,7 +1,8 @@
 from base import InterfaceTTSClient, LoggableInterface
 from exceptions.base import RobotisOP2TTSException
 from exceptions.config import AudioFileFormatException, AudioFilePlayerException, \
-            TTSEnginesPriorityNotProvidedException, TTSEnginesNotProvidedException
+            TTSEnginesNotProvidedException, \
+            TTSEnginePriorityNotNumberException, TTSEnginePriorityNotProvidedException
 from tts_engines.cloud.tts_delegate import TTSCloudClientDelegate
 from tts_engines.onboard.tts_delegate import TTSOnboardClientDelegate
 
@@ -175,34 +176,54 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
             pass
         raise AudioFilePlayerException(str_name_audio_file_player)
 
+    def _validate_tts_engines_presence(self, dict_engines_tts):
+        """
+        Validates presence of TTS engines.
+
+        * It is acceptable what one TTS engine is not provided.
+
+        :raises
+            * TTSEnginesNotProvidedException - if there is no engines provided.
+        :param dict_engines_tts: dictionary with TTS engines descriptions.
+        :return: bool - validation result. (True - valid, False - invalid).
+        """
+        int_count_engines_priority_provided = 0
+        for str_name_engine, dict_config in dict_engines_tts.items():
+            int_count_engines_priority_provided += 1
+
+        if int_count_engines_priority_provided == 0:
+            raise TTSEnginesNotProvidedException()
+
+        self.logger.debug("At least one TTS engine is provided.")
+        return True
+
     def _validate_tts_engines_priority(self, dict_engines_tts):
         """
         Validates presence of priority field for TTS synthesis methods (cloud/onboard).
 
+        :raises
+            * TTSEnginePriorityNotNumberException - if priority is not a number.
+            * TTSEnginePriorityNotProvidedException - if priority is not provided.
         :param dict_engines_tts: dictionary with TTS engines descriptions.
         :return: bool - validation result. (True - valid, False - invalid).
         """
-        try:
-            dict_engines_tts_cloud = dict_engines_tts['cloud']
+        for str_name_engine, dict_config in dict_engines_tts.items():
+            bool_is_value_error = False
+            bool_is_key_error = False
             try:
-                if int(dict_engines_tts_cloud['priority']):
-                    pass
-            except ValueError or TypeError:  # provided priority is not a number or not provided
-                return False
-        except KeyError:  # if configuration for TTS synthesis method is not provided
-            pass
+                try:
+                    if int(dict_config['priority']):
+                        pass
+                except ValueError or TypeError:  # provided priority is not a number or not provided
+                    bool_is_value_error = True
+                if bool_is_value_error:     # to ignore source error
+                    raise TTSEnginePriorityNotNumberException()
+            except KeyError:
+                bool_is_key_error = True
+            if bool_is_key_error:  # to ignore source error
+                raise TTSEnginePriorityNotProvidedException()
 
-        try:
-            dict_engines_tts_onboard = dict_engines_tts['onboard']
-            try:
-                if int(dict_engines_tts_onboard['priority']):
-                    pass
-            except ValueError or TypeError:  # provided priority is not a number or not provided
-                return False
-        except KeyError:  # if configuration for TTS synthesis method is not provided
-            pass
-
-        self.logger.debug("All TTS engines provides priority.")
+        self.logger.debug("All TTS engines provide priority.")
         return True
 
     def _validate_tts_engines(self, dict_engines_tts):
@@ -212,19 +233,12 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
 
         * Each TTS service is responsible for self-validation.
 
-        :raises
-            * TTSEnginesPriorityNotProvidedException - TTS engine priority is not provided.
-            * TTSEnginesNotProvidedException - TTS engines are not provided.
         :param dict_engines_tts: dictionary with TTS engines descriptions.
         :return: bool - validation result. (True - valid, False - invalid).
         """
-        if dict_engines_tts['cloud'] or dict_engines_tts['onboard']:
-            if self._validate_tts_engines_priority(dict_engines_tts):
-                return True
-            else:
-                raise TTSEnginesPriorityNotProvidedException()
-        else:
-            raise TTSEnginesNotProvidedException()
+        if self._validate_tts_engines_presence(dict_engines_tts) and \
+                self._validate_tts_engines_priority(dict_engines_tts):
+            return True
 
     def validate_configuration(self, dict_config):
         """

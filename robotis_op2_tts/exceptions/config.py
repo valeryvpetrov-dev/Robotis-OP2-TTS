@@ -22,12 +22,28 @@ class TTSEnginesNotProvidedException(RobotisOP2TTSException):
     TTS engines configurations are not provided exception class.
     """
     def __init__(self) -> None:
-        super().__init__("No one TTS engine configuration was not provided.")
+        super().__init__("No one TTS engine configuration is not provided.")
 
 
-class TTSEnginesPriorityNotProvidedException(RobotisOP2TTSException):
+class TTSEngineNotProvidedException(RobotisOP2TTSException):
     """
-    Priority for cloud/onboard and particular TTSs are not provided exception class.
+    One of TTS engine configurations is not provided exception class.
+    """
+    def __init__(self) -> None:
+        super().__init__("One of TTS engines configuration is not provided.")
+
+
+class TTSEnginePriorityNotNumberException(RobotisOP2TTSException):
+    """
+    TTS engine priority is not a number exception class.
+    """
+    def __init__(self) -> None:
+        super().__init__("TTS engine priority is not a number.")
+
+
+class TTSEnginePriorityNotProvidedException(RobotisOP2TTSException):
+    """
+    Priority of TTS engine is not provided exception class.
     """
     def __init__(self) -> None:
         super().__init__("TTS priority is not provided.")
