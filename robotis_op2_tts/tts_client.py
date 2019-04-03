@@ -167,11 +167,13 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
         import subprocess
 
         str_name_audio_file_player = dict_audio_file_player_config["name"]
-        if len(subprocess.check_output(["which", str_name_audio_file_player])) > 0:
-            self.logger.debug("%s audio file player is available.", str_name_audio_file_player)
-            return True
-        else:
-            raise AudioFilePlayerException()
+        try:
+            if len(subprocess.check_output(["which", str_name_audio_file_player])) > 0:
+                self.logger.debug("%s audio file player is available.", str_name_audio_file_player)
+                return True
+        except subprocess.CalledProcessError as e:
+            pass
+        raise AudioFilePlayerException(str_name_audio_file_player)
 
     def _validate_tts_engines_priority(self, dict_engines_tts):
         """

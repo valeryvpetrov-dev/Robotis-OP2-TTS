@@ -13,8 +13,8 @@ class AudioFilePlayerException(RobotisOP2TTSException):
     """
     Audio player system program is not available exception class.
     """
-    def __init__(self) -> None:
-        super().__init__("Audio player is not available.")
+    def __init__(self, str_name_audio_file_player) -> None:
+        super().__init__("'{}' audio player is not available.".format(str_name_audio_file_player))
 
 
 class TTSEnginesNotProvidedException(RobotisOP2TTSException):
