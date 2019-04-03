@@ -50,8 +50,16 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
             self._config_tts = dict_config_tts
 
             dict_engines_tts = self._config_tts['tts_engines']
-            dict_config_cloud_tts = dict_engines_tts['cloud'].copy()
-            dict_config_onboard_tts = dict_engines_tts['onboard'].copy()
+            dict_config_cloud_tts = None
+            dict_config_onboard_tts = None
+            try:
+                dict_config_cloud_tts = dict_engines_tts['cloud'].copy()
+            except KeyError:
+                pass
+            try:
+                dict_config_onboard_tts = dict_engines_tts['onboard'].copy()
+            except KeyError:
+                pass
 
             if dict_config_cloud_tts:
                 dict_config_cloud_tts.pop('priority', None) # information about priority is not valuable for TTS client
@@ -63,7 +71,7 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
                 dict_config_onboard_tts['audio_file_format'] = self._config_tts['audio_file_format']
                 dict_config_onboard_tts['audio_file_player'] = self._config_tts['audio_file_player']
                 self._client_tts_onboard = TTSOnboardClientDelegate(dict_config_onboard_tts)
-            self.logger.debug("All TTS client delegates are initialized.")
+            self.logger.debug("Available TTS client delegates are initialized.")
 
     def _get_preferable_tts_client(self):
         """
@@ -72,6 +80,22 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
         :return: Implementation of InterfaceTTSClient (actually, child of AbstractTTSClientDelegate).
         """
         if self._client_tts_preferable is None:
+            bool_one_tts = False
+            try:
+                self._config_tts['tts_engines']['cloud']
+            except KeyError:
+                self._client_tts_preferable = self._client_tts_onboard
+                bool_one_tts = True
+            try:
+                self._config_tts['tts_engines']['onboard']
+            except KeyError:
+                self._client_tts_preferable = self._client_tts_cloud
+                bool_one_tts = True
+
+            if bool_one_tts:
+                self.logger.debug("%s is chosen as preferable.", self._client_tts_preferable)
+                return self._client_tts_preferable
+
             if self._config_tts['tts_engines']['cloud']['priority'] < \
                     self._config_tts['tts_engines']['onboard']['priority']:
                 self._client_tts_preferable = self._client_tts_cloud
