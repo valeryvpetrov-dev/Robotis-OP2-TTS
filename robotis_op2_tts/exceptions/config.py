@@ -5,8 +5,8 @@ class AudioFileFormatException(RobotisOP2TTSException):
     """
     Audio file format is not supporter exception class.
     """
-    def __init__(self) -> None:
-        super().__init__("Audio file format is not supported.")
+    def __init__(self, str_format_file_audio) -> None:
+        super().__init__("'{}' audio file format is not supported.".format(str_format_file_audio))
 
 
 class AudioFilePlayerException(RobotisOP2TTSException):

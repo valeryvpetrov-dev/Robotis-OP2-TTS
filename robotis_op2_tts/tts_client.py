@@ -135,7 +135,7 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
         Validates TTS configuration audio file format field.
 
         * Supported formats:
-            - mp3, wav, ogg, gsm, dct, au, aiff, flac, vox, raw.
+            - mp3.
 
         ! Your audio file player must be able to play this format)
 
@@ -144,13 +144,13 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
         :param str_format_file_audio: string-value from configuration dictionary.
         :return: bool - validation result. (True - valid, False - invalid)
         """
-        LIST_AVAILABLE_AUDIO_FORMAT = ["mp3", "wav", "ogg", "gsm", "dct", "au", "aiff", "flac", "vox", "raw"]
+        LIST_AVAILABLE_AUDIO_FORMAT = ["mp3"]
 
         if str_format_file_audio in LIST_AVAILABLE_AUDIO_FORMAT:
             self.logger.debug("%s audio file format is valid.", str_format_file_audio)
             return True
         else:
-            raise AudioFileFormatException()
+            raise AudioFileFormatException(str_format_file_audio)
 
     def _validate_audio_file_player(self, dict_audio_file_player_config):
         """
