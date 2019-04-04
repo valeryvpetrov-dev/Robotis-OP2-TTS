@@ -6,6 +6,7 @@ import os
 from io import TextIOBase
 
 from google.cloud import texttospeech
+from google.api_core.exceptions import GoogleAPICallError
 
 
 class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
@@ -104,7 +105,12 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
 
         # perform the text-to-speech request on the text input with the selected voice parameters and audio file type
         # the response's audio_content is binary
-        response = self._client_tts.synthesize_speech(synthesis_input, voice, audio_config)
+        try:
+            response = self._client_tts.synthesize_speech(synthesis_input, voice, audio_config)
+        except GoogleAPICallError as e:
+            self.logger.error(msg=str(e), exc_info=True)
+            exit()
+
         self.logger.debug("Response is gotten.")
 
         # write the response to the output file
