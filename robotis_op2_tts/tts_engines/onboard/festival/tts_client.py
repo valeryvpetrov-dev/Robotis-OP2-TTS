@@ -59,16 +59,21 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         if isinstance(source_text, TextIOBase):     # if source_text is represented as file
             try:
                 source_text = source_text.read()
-            except UnicodeDecodeError as e:
+            except UnicodeDecodeError as e:         # if source text file is not text file
                 self.logger.error(msg=str(e), exc_info=True)
                 exit()
             self.logger.debug("Source text is represented as file, read content.")
 
-        _int_code_result = subprocess.check_call(
-            self._str_command_save_speech.format(text=source_text, file=str_path_file_audio),
-            stderr=subprocess.STDOUT,
-            shell=True      # security hazard
-        )
+        try:
+            _int_code_result = subprocess.check_call(
+                self._str_command_save_speech.format(text=source_text, file=str_path_file_audio),
+                stderr=subprocess.STDOUT,
+                shell=True      # security hazard
+            )
+        except subprocess.CalledProcessError as e:
+            self.logger.error(msg=str(e), exc_info=True)
+            exit()
+
         if _int_code_result == 0:   # success
             self.logger.debug("Synthesized speech is writen to file.")
             return str_path_file_audio
@@ -96,11 +101,16 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
                 exit()
             self.logger.debug("Source text is represented as file, read content.")
 
-        _int_code_result = subprocess.check_call(
-            self._str_command_play_speech.format(text=source_text),
-            stderr=subprocess.STDOUT,
-            shell=True      # security hazard
-        )
+        try:
+            _int_code_result = subprocess.check_call(
+                self._str_command_play_speech.format(text=source_text),
+                stderr=subprocess.STDOUT,
+                shell=True      # security hazard
+            )
+        except subprocess.CalledProcessError as e:
+            self.logger.error(msg=str(e), exc_info=True)
+            exit()
+
         if _int_code_result == 0:   # success
             self.logger.debug("Speech is synthesized.")
             return True
