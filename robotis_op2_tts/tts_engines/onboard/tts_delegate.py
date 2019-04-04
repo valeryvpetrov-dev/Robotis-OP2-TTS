@@ -34,6 +34,7 @@ class TTSOnboardClientDelegate(AbstractTTSClientDelegate, InterfaceTTSOnboardCli
         """
         Implements corresponding method of interface parent class.
         """
+        self.logger.info("Speech synthesis starts. Please, wait.")
         self.logger.debug("It redirects call to %s.", self._client_tts)
         return self._client_tts.synthesize_audio(source_text)
 
@@ -41,6 +42,7 @@ class TTSOnboardClientDelegate(AbstractTTSClientDelegate, InterfaceTTSOnboardCli
         """
         Implements corresponding method of interface parent class.
         """
+        self.logger.info("Speech synthesis starts. Please, wait.")
         self.logger.debug("It redirects call to %s.", self._client_tts)
         return self._client_tts.synthesize_speech(source_text)
 

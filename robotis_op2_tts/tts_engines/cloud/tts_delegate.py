@@ -39,6 +39,7 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         Implements corresponding method of interface parent class.
         """
         if self.validate_network():
+            self.logger.info("Speech synthesis starts. Please, wait.")
             self.logger.debug("It redirects call to %s.", self._client_tts)
             str_file_audio = self._client_tts.synthesize_audio(source_text)
             return str_file_audio
@@ -50,8 +51,10 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         Implements corresponding method of interface parent class.
         """
         if self.validate_network():
+            self.logger.info("Speech synthesis starts. Please, wait.")
             self.logger.debug("It redirects call to %s.", self._client_tts)
             str_path_file_audio = self._client_tts.synthesize_audio(source_text)
+
             str_command_play_audio = self._str_command_play_audio.format(file=str_path_file_audio)
             self.logger.debug("It calls audio player to play audio.")
             str_output_command_play_audio = subprocess.check_output(str_command_play_audio.split(' '),
@@ -80,4 +83,9 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         Implements corresponding method of interface parent class.
         """
         self.logger.debug("It redirects call to %s", self._client_tts)
-        return self._client_tts.validate_network()
+        bool_result = self._client_tts.validate_network()
+        if bool_result:
+            self.logger.info("Network configuration is applicable.")
+        else:
+            self.logger.info("Network configuration is not applicable.")
+        return bool_result

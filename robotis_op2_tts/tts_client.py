@@ -127,15 +127,20 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
         """
         Implements corresponding method of interface parent class.
         """
-        _tts_client_preferable = self._get_preferable_tts_client()
-        self.logger.debug("It redirects call to %s", _tts_client_preferable)
-        str_path_file_audio = _tts_client_preferable.synthesize_audio(source_text)
+        _client_tts_preferable = self._get_preferable_tts_client()
+        self.logger.debug("It redirects call to %s", _client_tts_preferable)
+        str_path_file_audio = _client_tts_preferable.synthesize_audio(source_text)
         if str_path_file_audio is None:      # preferable TTS has not done job
             self.logger.info("%s does not succeed audio synthesis, now it tries another TTS.",
                              self._client_tts_preferable.__class__.__name__)
-            _tts_client_unpreferable = self._get_unpreferable_tts_client()
-            self.logger.debug("It redirects call to %s", _tts_client_unpreferable)
-            return _tts_client_unpreferable.synthesize_audio(source_text)    # ! loop
+            self._client_tts_preferable = self._get_unpreferable_tts_client()   # switch to unpreferable
+
+            if self._client_tts_preferable is None:     # no one engine is not able to process request
+                self.logger.warn("No one TTS is not able to synthesize audio. Please, check configuration.")
+                return None
+
+            self.logger.debug("It redirects call to %s", self._client_tts_preferable)
+            return self.synthesize_audio(source_text)    # ! loop
         self.logger.info("Audio synthesis succeeds. Output file path = %s", str_path_file_audio)
         return str_path_file_audio
 
@@ -143,17 +148,22 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
         """
         Implements corresponding method of interface parent class.
         """
-        _tts_client_preferable = self._get_preferable_tts_client()
-        self.logger.debug("It redirects call to %s", _tts_client_preferable)
-        if _tts_client_preferable.synthesize_speech(source_text):
+        _client_tts_preferable = self._get_preferable_tts_client()
+        self.logger.debug("It redirects call to %s", _client_tts_preferable)
+        if _client_tts_preferable.synthesize_speech(source_text):
             self.logger.info("Speech synthesis succeeds. You can hear it.")
             return True
         else:       # preferable TTS has not done job
             self.logger.info("%s does not succeed speech synthesis, now it tries another TTS.",
                              self._client_tts_preferable.__class__.__name__)
-            _tts_client_unpreferable = self._get_unpreferable_tts_client()
-            self.logger.debug("It redirects call to %s", _tts_client_unpreferable)
-            return _tts_client_unpreferable.synthesize_speech(source_text)   # ! loop
+            self._client_tts_preferable = self._get_unpreferable_tts_client()   # switch to unpreferable
+
+            if self._client_tts_preferable is None:     # no one engine is not able to process request
+                self.logger.warn("No one TTS is not able to synthesize speech. Please, check configuration.")
+                return None
+
+            self.logger.debug("It redirects call to %s", self._client_tts_preferable)
+            return self.synthesize_speech(source_text)
 
     def _validate_audio_file_format(self, str_format_file_audio):
         """
