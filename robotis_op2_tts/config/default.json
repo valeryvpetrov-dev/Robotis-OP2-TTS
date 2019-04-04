@@ -15,7 +15,7 @@
           "pitch": 4.0,
           "effects_profile_id": ["large-home-entertainment-class-device"]
         },
-        "network": {
+        "network_params": {
           "test_ping_destination": "cloud.google.com",
           "test_download_destination": "google.com"
         }

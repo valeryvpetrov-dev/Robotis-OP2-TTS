@@ -19,20 +19,40 @@ class GoogleApplicationCredentialsNotProvided(TTSGoogleCloudException):
         super().__init__("Environment variable GOOGLE_APPLICATION_CREDENTIALS is not provided.")
 
 
-class CallParamNotFoundException(TTSGoogleCloudException):
+class RequiredCallParamNotProvidedException(TTSGoogleCloudException):
     """
-    Call param not found exception class.
+    Required call param is not provided exception class.
     """
-    def __init__(self) -> None:
-        super().__init__("Cloud TTS call param not found exception.")
+    def __init__(self, str_name_param_call_required) -> None:
+        super().__init__("Google Cloud TTS required call param '{}' is not provided."
+                         .format(str_name_param_call_required))
 
 
-class NetworkParamNotFoundException(TTSGoogleCloudException):
+class RequiredNetworkParamNotProvidedException(TTSGoogleCloudException):
     """
-    Network param not found exception class.
+    Required network param is not provided exception class.
     """
-    def __init__(self) -> None:
-        super().__init__("Cloud TTS network param not found exception.")
+    def __init__(self, str_name_param_call_required) -> None:
+        super().__init__("Google Cloud TTS required network param '{}' is not provided."
+                         .format(str_name_param_call_required))
+
+
+class CallParamValueNotProvidedException(TTSGoogleCloudException):
+    """
+    Required call param value is not provided exception class.
+    """
+    def __init__(self, str_name_param_call_required) -> None:
+        super().__init__("Value related to call param '{}' is not provided. "
+                         .format(str_name_param_call_required))
+
+
+class NetworkParamValueNotProvidedException(TTSGoogleCloudException):
+    """
+    Required network param value is not provided exception class.
+    """
+    def __init__(self, str_name_param_call_required) -> None:
+        super().__init__("Value related to network param '{}' is not provided. "
+                         .format(str_name_param_call_required))
 
 
 class NetworkNotAccessibleException(TTSGoogleCloudException):
