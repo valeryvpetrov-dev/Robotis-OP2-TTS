@@ -91,7 +91,7 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         if isinstance(source_text, TextIOBase):  # if source_text is represented as file
             try:
                 source_text = source_text.read()
-            except UnicodeDecodeError as e:
+            except UnicodeDecodeError as e:      # if source text file is not text file
                 self.logger.error(msg=str(e), exc_info=True)
                 exit()
             self.logger.debug("Source text is represented as file, read content.")
@@ -119,11 +119,15 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         """
         import subprocess
 
-        _str_output = subprocess.check_output(["which", "festival"])
-        if len(_str_output) == 0:
-            raise FestivalNotAvailableException()
-        self.logger.debug("Festival is available at %s.", _str_output)
-        return True
+        try:
+            _str_output = subprocess.check_output(["which", "festival"])
+            if len(_str_output) == 0:
+                raise FestivalNotAvailableException()
+            self.logger.debug("Festival is available at %s.", _str_output)
+            return True
+        except subprocess.CalledProcessError as e:
+            self.logger.error(msg=str(e), exc_info=True)
+            exit()
 
     def _validate_language_support(self, dict_config):
         """
@@ -140,18 +144,23 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         from os import stat, listdir
 
         # for current configuration of Festival
-        _str_path_dir_share_festival_languages = '/usr/share/festival/languages/'
-        _str_name_language = dict_config['play']['call_params']['--language']
-        for _str_name_file in listdir(_str_path_dir_share_festival_languages):
-            if _str_name_language in _str_name_file:        # check all files that corresponds to language
-                _str_path_file_language = _str_path_dir_share_festival_languages + _str_name_file
-                if stat(_str_path_file_language).st_size == 0:  # file is emtpy
-                    raise LanguageNotSupportedException(_str_name_language)
-                else:
-                    self.logger.debug("%s language settings file = %s.",
-                                      _str_name_language, _str_path_file_language)
-        self.logger.debug("%s language is supported.", _str_name_language)
-        return True
+        try:
+            _str_path_dir_share_festival_languages = '/usr/share/festival/languages/'
+            _str_name_language = dict_config['play']['call_params']['--language']
+            for _str_name_file in listdir(_str_path_dir_share_festival_languages):
+                if _str_name_language in _str_name_file:        # check all files that corresponds to language
+                    _str_path_file_language = _str_path_dir_share_festival_languages + _str_name_file
+                    if stat(_str_path_file_language).st_size != 0:  # file is not emtpy
+                        self.logger.debug("%s language settings file = %s.",
+                                          _str_name_language, _str_path_file_language)
+                        self.logger.debug("%s language is supported.", _str_name_language)
+                        return True     # does not check other configurations if one exists
+                    else:   # it is possible that language directory contains several configurations
+                        pass
+            raise LanguageNotSupportedException(_str_name_language)
+        except FileNotFoundError as e:
+            self.logger.error(msg=str(e), exc_info=True)
+            exit()
 
     def validate_configuration(self, dict_config):
         """
