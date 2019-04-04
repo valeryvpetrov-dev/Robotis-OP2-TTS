@@ -35,6 +35,14 @@ class SourceTextFileNotFoundException(RobotisOP2TTSException):
         super().__init__("Text file was not found.")
 
 
+class SourceTextEmptyException(RobotisOP2TTSException):
+    """
+    Text source is empty exception class.
+    """
+    def __init__(self) -> None:
+        super().__init__("Text source is empty.")
+
+
 class SeveralSourceTextsException(RobotisOP2TTSException):
     """
     Several source texts available exception class.

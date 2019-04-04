@@ -42,6 +42,7 @@ def validate_text_source(args):
     :raises:
         * NoSourceTextException - if there is no source text.
         * SeveralSourceTextsException - if there are several source texts.
+        * SourceTextEmptyException - if text source is empty.
         * SourceTextFileNotFoundException - if source text file does not exist.
     :param args: parsed arguments.
     :return: None (args can be modified).
@@ -51,13 +52,18 @@ def validate_text_source(args):
 
     if args.text and args.file:
         raise SeveralSourceTextsException()
-    elif args.file:
+
+    if args.file:
         logger.info("Text file path = {}".format(args.file))
         if os.path.isfile(args.file):
-            logger.info("Text file was found.")
+            if os.stat(args.file).st_size > 0:
+                logger.info("Text file was found.")
+            else:
+                raise SourceTextEmptyException()
         else:
             raise SourceTextFileNotFoundException()
-    elif args.text:
+
+    if args.text:
         pass
     logger.info("Text to speech was provided.")
 
