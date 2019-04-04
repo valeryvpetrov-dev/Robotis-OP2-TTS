@@ -55,11 +55,19 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
             self.logger.debug("It redirects call to %s.", self._client_tts)
             str_path_file_audio = self._client_tts.synthesize_audio(source_text)
 
-            str_command_play_audio = self._str_command_play_audio.format(file=str_path_file_audio)
-            self.logger.debug("It calls audio player to play audio.")
-            str_output_command_play_audio = subprocess.check_output(str_command_play_audio.split(' '),
-                                                                    stderr=subprocess.STDOUT).decode('utf-8')
-            self.logger.debug("\n" + str_output_command_play_audio)
+            if str_path_file_audio:
+                str_command_play_audio = self._str_command_play_audio.format(file=str_path_file_audio)
+                self.logger.debug("It calls audio player to play audio.")
+
+                try:
+                    str_output_command_play_audio = subprocess.check_output(str_command_play_audio.split(' '),
+                                                                            stderr=subprocess.STDOUT).decode('utf-8')
+                    self.logger.debug("\n" + str_output_command_play_audio)
+                except subprocess.CalledProcessError as e:
+                    self.logger.error(msg=str(e), exc_info=True)
+                    exit()
+            else:
+                return False
             return True
         else:
             return False
