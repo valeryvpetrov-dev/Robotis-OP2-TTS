@@ -11,6 +11,7 @@ from google.cloud import texttospeech
 
 
 def synthesize(str_text, file_audio,
+               bool_is_ssml: bool,
                language_code: str, name: str,                                   # Logical params
                speaking_rate: float, pitch: float, effects_profile_id: list = []     # Technical params
                ):
@@ -26,6 +27,7 @@ def synthesize(str_text, file_audio,
 
     :param str_text: text to convert to speech.
     :param file_audio: output audio file with synthesized speech.
+    :param bool_is_ssml: Synthesize Speech Markup Language (SSML) - source text is marked up flag.
 
     Logical params:
     * Description: https://cloud.google.com/text-to-speech/docs/reference/rpc/google.cloud.texttospeech.v1beta1#voiceselectionparams
@@ -44,7 +46,10 @@ def synthesize(str_text, file_audio,
     client = texttospeech.TextToSpeechClient()
 
     # Set the text input to be synthesized
-    synthesis_input = texttospeech.types.SynthesisInput(text=str_text)
+    if bool_is_ssml:
+        synthesis_input = texttospeech.types.SynthesisInput(ssml=str_text)
+    else:
+        synthesis_input = texttospeech.types.SynthesisInput(text=str_text)
 
     # Build the voice request, select the language code ("en-US") and the ssml
     # voice gender ("neutral")
@@ -96,80 +101,13 @@ if __name__ == '__main__':
         pass
 
     list_dict_config_tts = [                                        # list of all configurations to be applied
-        {                                                           # gradeschooler girl
-            # Logical params
-            "language_code": "ru-RU",                               # Russian language
-            "name": "ru-RU-Standard-A",                             # female voice
-            # Technical params
-            "speaking_rate": 0.85,                                   # a bit slower
-            "pitch": 5.6,                                           # small rise semitones
+        {
+            "language_code": "en-GB",
+            "name": "en-GB-Wavenet-A",
+            "speaking_rate": 0.85,
+            "pitch": 2.0,
             "effects_profile_id": ["large-home-entertainment-class-device"]
-        },
-        {                                                           # teen girl
-            "language_code": "ru-RU",                               # Russian language
-            "name": "ru-RU-Standard-C",                             # female voice
-            "speaking_rate": 0.85,                                  # a bit slower
-            "pitch": 4.8,                                           # small rise semitones
-            "effects_profile_id": ["large-home-entertainment-class-device"]
-        },
-        {                                                           # young adult girl
-            "language_code": "ru-RU",  # Russian language
-            "name": "ru-RU-Wavenet-A",  # female voice
-            "speaking_rate": 0.85,  # a bit slower
-            "pitch": 4.4,  # small rise semitones
-            "effects_profile_id": ["large-home-entertainment-class-device"]
-        },
-        {  # young adult girl
-            "language_code": "ru-RU",  # Russian language
-            "name": "ru-RU-Wavenet-C",  # female voice
-            "speaking_rate": 0.85,  # a bit slower
-            "pitch": 7.1,  # medium rise semitones
-            "effects_profile_id": ["large-home-entertainment-class-device"]
-        },
-        {  # teen boy
-            "language_code": "ru-RU",  # Russian language
-            "name": "ru-RU-Standard-B",  # male voice
-            "speaking_rate": 0.85,  # a bit slower
-            "pitch": 6.6,  # medium rise semitones
-            "effects_profile_id": ["large-home-entertainment-class-device"]
-        },
-        {  # teen boy
-            "language_code": "ru-RU",  # Russian language
-            "name": "ru-RU-Standard-D",  # male voice
-            "speaking_rate": 0.85,  # a bit slower
-            "pitch": 7.2,  # medium rise semitones
-            "effects_profile_id": ["large-home-entertainment-class-device"]
-        },
-        {  # teen boy
-            "language_code": "ru-RU",  # Russian language
-            "name": "ru-RU-Wavenet-B",  # male voice
-            "speaking_rate": 0.85,  # a bit slower
-            "pitch": 8,  # medium rise semitones
-            "effects_profile_id": ["large-home-entertainment-class-device"]
-        },
-        {  # young adult boy
-            "language_code": "ru-RU",  # Russian language
-            "name": "ru-RU-Wavenet-D",  # male voice
-            "speaking_rate": 0.85,  # a bit slower
-            "pitch": 9.2,  # medium rise semitones
-            "effects_profile_id": ["large-home-entertainment-class-device"]
-        },
-
-
-        # {  # young adult boy
-        #     "language_code": "tr-TR",  # Russian language
-        #     "name": "tr-TR-Wavenet-B",  # male voice
-        #     "speaking_rate": 0.85,  # a bit slower
-        #     "pitch": 6.1,  # medium rise semitones
-        #     "effects_profile_id": ["large-home-entertainment-class-device"]
-        # },
-        # {  # young adult boy
-        #     "language_code": "tr-TR",  # Russian language
-        #     "name": "tr-TR-Wavenet-A",  # male voice
-        #     "speaking_rate": 0.85,  # a bit slower
-        #     "pitch": 2.4,  # medium rise semitones
-        #     "effects_profile_id": ["large-home-entertainment-class-device"]
-        # },
+        }
     ]
 
     for str_name_input_file in listdir(str_path_input_dir):
@@ -181,13 +119,14 @@ if __name__ == '__main__':
             except FileExistsError:
                 pass
 
+            bool_is_ssml = str_name_input_file.split(".")[-1] == "ssml"
             file_text = open("{dir}/{file}".format(dir=str_path_input_dir, file=str_name_input_file), 'r')
 
             str_name_file_audio = "{name}.{extension}"\
                 .format(name=str_name_input_file.split(".")[0], extension="mp3")
             file_audio = open("{dir}/{file}".format(dir=str_path_output_dir_config, file=str_name_file_audio), 'wb')
 
-            synthesize(file_text.read(), file_audio, **dict_config_tts)
+            synthesize(file_text.read(), file_audio, bool_is_ssml, **dict_config_tts)
 
             print("Synthesis for configuration: {config} was done.".format(config=dict_config_tts))
         print("Synthesis for file {file_name} was done.\n".format(file_name=str_name_input_file))
