@@ -1,6 +1,6 @@
 import os
 from sys import exit
-from exceptions.cli import *
+from _exceptions.cli import *
 from base import LoggableInterface
 
 logger = LoggableInterface(name=__name__).logger     # logger instance
@@ -21,7 +21,7 @@ def validate_configuration_file_path(args):
         logger.info("There is no passed path to configuration file. Default one will be used.")
         args.config = os.path.abspath("./config/default.json")
 
-    logger.info("Configuration file path = {}".format(args.config))
+    logger.info("Configuration file path = %s" % args.config)
     if args.config:
         if os.path.isfile(args.config):
             if args.config.endswith(".json"):
@@ -54,7 +54,7 @@ def validate_text_source(args):
         raise SeveralSourceTextsException()
 
     if args.file:
-        logger.info("Text file path = {}".format(args.file))
+        logger.info("Text file path %s" % args.file)
         if os.path.isfile(args.file):
             if os.stat(args.file).st_size > 0:
                 logger.info("Text file was found.")

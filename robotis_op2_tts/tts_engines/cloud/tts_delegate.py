@@ -1,7 +1,6 @@
-from tts_engines.base import AbstractTTSClientDelegate
-from .base import InterfaceTTSCloudClient
+from tts_engines._base import AbstractTTSClientDelegate
+from ._base import InterfaceTTSCloudClient
 from .google_cloud.tts_client import TTSGoogleCloudClient
-from exceptions.base import RobotisOP2TTSException
 import subprocess
 
 
@@ -20,7 +19,7 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         Extends:
             - Creates instance of specific TTS cloud client based on configuration and sets it as _client_tts.
         """
-        super().set_configuration(dict_config)
+        AbstractTTSClientDelegate.set_configuration(self, dict_config)
 
         for str_name_tts, dict_config_tts in self._config_tts.items():
             if str_name_tts == 'google_cloud_tts':
@@ -56,7 +55,7 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
             str_path_file_audio = self._client_tts.synthesize_audio(source_text)
 
             if str_path_file_audio:
-                str_command_play_audio = self._str_command_play_audio.format(file=str_path_file_audio)
+                str_command_play_audio = self._str_command_play_audio.replace("{file}", str_path_file_audio)
                 self.logger.debug("It calls audio player to play audio.")
 
                 try:

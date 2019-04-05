@@ -1,5 +1,5 @@
-from tts_engines.base import AbstractTTSClientDelegate
-from .base import InterfaceTTSOnboardClient
+from tts_engines._base import AbstractTTSClientDelegate
+from ._base import InterfaceTTSOnboardClient
 from .festival.tts_client import TTSFestivalClient
 
 
@@ -18,7 +18,7 @@ class TTSOnboardClientDelegate(AbstractTTSClientDelegate, InterfaceTTSOnboardCli
         Extends:
             - Creates instance of specific TTS onboard client based on configuration and sets it as _client_tts.
         """
-        super().set_configuration(dict_config)
+        super(TTSOnboardClientDelegate, self).set_configuration(dict_config)
 
         for str_name_tts, dict_config_tts in self._config_tts.items():
             if str_name_tts == 'festival':

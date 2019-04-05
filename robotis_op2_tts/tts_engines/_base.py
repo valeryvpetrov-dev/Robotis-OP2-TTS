@@ -1,4 +1,5 @@
 from base import InterfaceTTSClient, LoggableInterface
+from errno import EEXIST
 
 
 class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
@@ -19,7 +20,7 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
 
         :param dict_config: configuration of TTS client.
         """
-        super().__init__(name=self.__class__.__name__)
+        super(AbstractTTSClient, self).__init__(name=self.__class__.__name__)
         self.set_configuration(dict_config)
         self.logger.debug("Instance initialization succeeds.")
 
@@ -34,7 +35,7 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
             from os import makedirs
             from os.path import abspath
 
-            self._str_format_file_audio = dict_config['audio_file_format']      # audio file format configuration
+            self._str_format_file_audio = dict_config['audio_file_format'].encode('ascii', 'ignore')      # audio file format configuration
             dict_config.pop('audio_file_format', None)                          # to not to duplicate data
             self._config_tts = dict_config
 
@@ -43,7 +44,7 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
                 makedirs(self._str_path_output_dir)
                 self.logger.debug("Output audio directory is created. Output directory path = %s",
                                   self._str_path_output_dir)
-            except FileExistsError:
+            except OSError or EEXIST:
                 self.logger.debug("Output audio directory is already exists. Output directory path = %s",
                                   self._str_path_output_dir)
                 pass
@@ -66,8 +67,7 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
                 _str_name_file_audio = source_text          # full string
             else:
                 _str_name_file_audio = source_text[:10]     # first 10 character from string
-        _str_name_file_audio = "{name}.{extension}".format(name=_str_name_file_audio,
-                                                           extension=self._str_format_file_audio)
+        _str_name_file_audio = "%s.%s" % (_str_name_file_audio, self._str_format_file_audio)
         str_path_file_audio = join(self._str_path_output_dir, _str_name_file_audio)
         self.logger.debug("Audio file path = %s", str_path_file_audio)
         return str_path_file_audio
@@ -91,7 +91,7 @@ class AbstractTTSClientDelegate(InterfaceTTSClient, LoggableInterface):
 
         :param dict_config: configuration of TTS client.
         """
-        super().__init__(name=self.__class__.__name__)
+        super(AbstractTTSClientDelegate, self).__init__(name=self.__class__.__name__)
         self.set_configuration(dict_config)
         self.logger.debug("Instance initialization succeeds.")
 
@@ -106,6 +106,6 @@ class AbstractTTSClientDelegate(InterfaceTTSClient, LoggableInterface):
         :return: None (fields will be initialized).
         """
         if self.validate_configuration(dict_config):
-            self._str_command_play_audio = dict_config['audio_file_player']['command']
+            self._str_command_play_audio = dict_config['audio_file_player']['command'].encode('ascii', 'ignore')
             dict_config.pop('audio_file_player')    # to not to duplicate data
             self._config_tts = dict_config

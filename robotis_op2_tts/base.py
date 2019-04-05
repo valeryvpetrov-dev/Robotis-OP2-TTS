@@ -1,4 +1,4 @@
-class InterfaceTTSClient:
+class InterfaceTTSClient(object):
     """
     Abstract TTS client class.
         - Declares interface of interaction with TTS client.
@@ -39,7 +39,7 @@ class InterfaceTTSClient:
         pass
 
 
-class LoggableInterface:
+class LoggableInterface(object):
     """
     Abstract class that is responsible for logging.
         - Declares abstract structure of loggable class.
@@ -51,9 +51,7 @@ class LoggableInterface:
     _console_handler = None         # console logs handler
     _console_formatter = None       # console logs formatter
 
-    def __init__(self, name, level=INFO) -> None:
-        super().__init__()
-
+    def __init__(self, name, level=INFO):
         import logging
         from sys import stdout
 

@@ -1,6 +1,6 @@
-from tts_engines.base import AbstractTTSClient
-from ..base import InterfaceTTSCloudClient
-from exceptions.tts_engines.cloud.google_cloud import *
+from tts_engines._base import AbstractTTSClient
+from .._base import InterfaceTTSCloudClient
+from _exceptions.tts_engines.cloud.google_cloud import *
 
 import os
 from io import TextIOBase
@@ -36,7 +36,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
             - Creates instance of TextToSpeechClient and sets it as _client_tts.
         """
         self._str_path_output_dir = "./data/cloud/google_cloud/audio"
-        super().set_configuration(dict_config)
+        super(TTSGoogleCloudClient, self).set_configuration(dict_config)
         self._client_tts = texttospeech.TextToSpeechClient()
 
     def _str_to_audioencoding(self, str_format_file_audio):
@@ -72,6 +72,9 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
                 - effects_profile_id: audio effect profile.
                 * Description: https://cloud.google.com/text-to-speech/docs/reference/rpc/google.cloud.texttospeech.v1beta1#audioconfig
         """
+        import urllib3
+        urllib3.disable_warnings()
+
         # creates audio file corresponding to source text
         str_path_file_audio = self._get_path_file_audio(source_text)
         file_audio = open(str_path_file_audio, 'wb')

@@ -1,7 +1,7 @@
-from tts_engines.base import AbstractTTSClient
-from ..base import InterfaceTTSOnboardClient
-from exceptions.base import RobotisOP2TTSException
-from exceptions.tts_engines.onboard.festival import FestivalNotAvailableException, LanguageNotSupportedException
+from tts_engines._base import AbstractTTSClient
+from .._base import InterfaceTTSOnboardClient
+from _exceptions.base import RobotisOP2TTSException
+from _exceptions.tts_engines.onboard.festival import *
 
 
 class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
@@ -27,18 +27,20 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
             - Initializes commands.
         """
         self._str_path_output_dir = "./data/onboard/festival/audio"
-        super().set_configuration(dict_config)
+        super(TTSFestivalClient, self).set_configuration(dict_config)
 
         # compile _str_command_play_speech
         self._str_command_play_speech = self._config_tts['play']['command']
         _list_param_call = []
         for _str_param_call, value in self._config_tts['play']['call_params'].items():
-            _list_param_call.append("{key} {value}".format(key=_str_param_call, value=str(value)))
+            _list_param_call.append("%s %s" % (_str_param_call, str(value)))
         self._str_command_play_speech = self._str_command_play_speech\
             .replace("{call_params}", " ".join(_list_param_call))
+        self._str_command_play_speech = self._str_command_play_speech.encode('ascii', 'ignore')
 
         # compile _str_command_save_speech
-        self._str_command_save_speech = self._config_tts['save']['command']\
+        _str_command_save_speech = self._config_tts['save']['command'].encode('ascii', 'ignore')
+        self._str_command_save_speech = _str_command_save_speech\
             .replace("{expression}", str(self._config_tts['save']['expression']))
 
     def synthesize_audio(self, source_text):
@@ -65,8 +67,10 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
             self.logger.debug("Source text is represented as file, read content.")
 
         try:
+            _str_command_save_speech = self._str_command_save_speech.replace("{text}", source_text)
+            _str_command_save_speech = _str_command_save_speech.replace("{file}", str_path_file_audio)
             _int_code_result = subprocess.check_call(
-                self._str_command_save_speech.format(text=source_text, file=str_path_file_audio),
+                _str_command_save_speech,
                 stderr=subprocess.STDOUT,
                 shell=True      # security hazard
             )
@@ -103,7 +107,7 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
 
         try:
             _int_code_result = subprocess.check_call(
-                self._str_command_play_speech.format(text=source_text),
+                self._str_command_play_speech.replace("{text}", source_text),
                 stderr=subprocess.STDOUT,
                 shell=True      # security hazard
             )
@@ -168,7 +172,7 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
                     else:   # it is possible that language directory contains several configurations
                         pass
             raise LanguageNotSupportedException(_str_name_language)
-        except FileNotFoundError as e:
+        except IOError as e:
             self.logger.error(msg=str(e), exc_info=True)
             exit()
 

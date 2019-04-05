@@ -1,6 +1,6 @@
 from base import InterfaceTTSClient, LoggableInterface
-from exceptions.base import RobotisOP2TTSException
-from exceptions.config import AudioFileFormatException, AudioFilePlayerException, \
+from _exceptions.base import RobotisOP2TTSException
+from _exceptions.config import AudioFileFormatException, AudioFilePlayerException, \
             TTSEnginesNotProvidedException, \
             TTSEnginePriorityNotNumberException, TTSEnginePriorityNotProvidedException
 from tts_engines.cloud.tts_delegate import TTSCloudClientDelegate
@@ -26,7 +26,7 @@ class RobotisOP2TTSClient(InterfaceTTSClient, LoggableInterface):
         2. Processes passed configuration.
         3. Interacts .
         """
-        super().__init__(name=self.__class__.__name__)
+        super(RobotisOP2TTSClient, self).__init__(name=self.__class__.__name__)
         self.set_configuration(str_path_file_config)
         self.logger.info("Instance initialization succeeds.")
 

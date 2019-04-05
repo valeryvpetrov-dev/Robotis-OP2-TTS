@@ -23,11 +23,6 @@ if __name__ == '__main__':
     4. Set TTS configuration to object;
     4. Call synthesize_* method. Passed source of text will be handled automatically.
     """
-    # add path to current module to PYTHONPATH environment variable
-    import sys
-
-    sys.path.insert(0, '.')
-
     from tts_client import RobotisOP2TTSClient
     from cli.parser import parse_arguments
 
