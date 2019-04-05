@@ -58,15 +58,13 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
         """
         from io import TextIOBase
         from os.path import basename, join
+        import datetime
 
         # creates audio file corresponding to source text
         if isinstance(source_text, TextIOBase):             # if source_text is represented as file
             _str_name_file_audio = basename(source_text.name).split(".")[0]
         else:                                               # if source_text is represented as string
-            if len(source_text) < 10:
-                _str_name_file_audio = source_text          # full string
-            else:
-                _str_name_file_audio = source_text[:10]     # first 10 character from string
+            _str_name_file_audio = datetime.datetime.now().strftime("%Y-%m-%d.%H:%M:%S")
         _str_name_file_audio = "%s.%s" % (_str_name_file_audio, self._str_format_file_audio)
         str_path_file_audio = join(self._str_path_output_dir, _str_name_file_audio)
         self.logger.debug("Audio file path = %s", str_path_file_audio)
