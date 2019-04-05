@@ -1,6 +1,5 @@
 from tts_engines._base import AbstractTTSClient
 from .._base import InterfaceTTSOnboardClient
-from _exceptions.base import RobotisOP2TTSException
 from _exceptions.tts_engines.onboard.festival import *
 
 
@@ -157,20 +156,37 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
         """
         from os import stat, listdir
 
-        # for current configuration of Festival
         try:
-            _str_path_dir_share_festival_languages = '/usr/share/festival/languages/'
             _str_name_language = dict_config['play']['call_params']['--language']
-            for _str_name_file in listdir(_str_path_dir_share_festival_languages):
-                if _str_name_language in _str_name_file:        # check all files that corresponds to language
-                    _str_path_file_language = _str_path_dir_share_festival_languages + _str_name_file
-                    if stat(_str_path_file_language).st_size != 0:  # file is not emtpy
-                        self.logger.debug("%s language settings file = %s.",
-                                          _str_name_language, _str_path_file_language)
-                        self.logger.debug("%s language is supported.", _str_name_language)
-                        return True     # does not check other configurations if one exists
-                    else:   # it is possible that language directory contains several configurations
-                        pass
+
+            # for current configuration of Festival
+            try:
+                _str_path_dir_share_festival_languages = '/usr/share/festival/languages/'
+                for _str_name_file in listdir(_str_path_dir_share_festival_languages):
+                    if _str_name_language in _str_name_file:        # check all files that corresponds to language
+                        _str_path_file_language = _str_path_dir_share_festival_languages + _str_name_file
+                        if stat(_str_path_file_language).st_size != 0:  # file is not emtpy
+                            self.logger.debug("%s language settings file = %s.",
+                                              _str_name_language, _str_path_file_language)
+                            self.logger.debug("%s language is supported.", _str_name_language)
+                            return True     # does not check other configurations if one exists
+                        else:   # it is possible that language directory contains several configurations
+                            pass
+            except OSError as e:    # no languages directory
+                pass
+
+            # for Robotis OP2 configuration of Festival
+            try:
+                _str_path_file_share_festival_languages = '/usr/share/festival/languages.scm'
+                _str_keyword = "define (language_%s)" % _str_name_language
+                _file_languages = open(_str_path_file_share_festival_languages, 'r')
+                for _str_line in _file_languages:
+                    if _str_keyword in _str_line:
+                        return True
+                _file_languages.close()
+            except OSError as e:    # no languages file
+                pass
+
             raise LanguageNotSupportedException(_str_name_language)
         except IOError as e:
             self.logger.error(msg=str(e), exc_info=True)
