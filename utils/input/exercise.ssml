@@ -1,0 +1,32 @@
+<speak>
+  <par>
+    <media xml:id="manifest" begin="0.5s">
+      <speak>
+				<emphasis level="strong">
+					Давайте выполним зарядку!
+				</emphasis>
+      </speak>
+    </media>
+			
+    <media xml:id="music" begin="manifest.end" end="20.0s" soundLevel="+20db" fadeInDur="1s" fadeOutDur="1.5s">
+      <audio
+        src="https://incompetech.com/music/royalty-free/mp3-royaltyfree/Barroom%20Ballet.mp3"/>
+    </media>
+
+		<media xml:id="instruction0" begin="music.begin+0.5s">
+      <speak>
+				<emphasis level="strong">
+					Повторяйте за мной! <break time="1.5s"/>
+				</emphasis>
+      </speak>
+    </media>
+
+		<media xml:id="instruction1" begin="instruction0.end+2.5s" repeatCount="2" fadeOutDur="0.5s">
+      <speak>
+				<emphasis level="strong">
+					Молодцы! <break time="2.5s"/>
+				</emphasis>
+      </speak>
+    </media>
+  </par>
+</speak>

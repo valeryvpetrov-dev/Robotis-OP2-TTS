@@ -11,9 +11,9 @@ from google.cloud import texttospeech
 
 
 def synthesize(str_text, file_audio,
-               bool_is_ssml: bool,
-               language_code: str, name: str,                                   # Logical params
-               speaking_rate: float, pitch: float, effects_profile_id: list = []     # Technical params
+               bool_is_ssml,
+               language_code, name,                                   # Logical params
+               speaking_rate, pitch, effects_profile_id = []     # Technical params
                ):
     """
     Google Cloud TTS. Synthesizes speech audio file based on text using passed configuration.
@@ -91,19 +91,22 @@ if __name__ == '__main__':
     3. Run script.
     4. Check out result in ./output directory. Audio files have the same name as corresponding .txt.
     """
+    import urllib3
+    urllib3.disable_warnings()
+
     from os import listdir
 
     str_path_input_dir = os.path.abspath("./input")
     str_path_output_dir = os.path.abspath("./output")
     try:
         os.mkdir(str_path_output_dir)
-    except FileExistsError:
+    except OSError:
         pass
 
     list_dict_config_tts = [                                        # list of all configurations to be applied
         {
-            "language_code": "en-GB",
-            "name": "en-GB-Wavenet-A",
+            "language_code": "ru-RU",
+            "name": "ru-RU-Wavenet-A",
             "speaking_rate": 0.85,
             "pitch": 2.0,
             "effects_profile_id": ["large-home-entertainment-class-device"]
@@ -116,7 +119,7 @@ if __name__ == '__main__':
             str_path_output_dir_config = "{dir}/{config}".format(dir=str_path_output_dir, config=str_name_config)
             try:
                 os.mkdir(str_path_output_dir_config)
-            except FileExistsError:
+            except OSError:
                 pass
 
             bool_is_ssml = str_name_input_file.split(".")[-1] == "ssml"
