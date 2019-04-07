@@ -229,10 +229,11 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
             * NetworkNotAccessibleException - if network connection is not set.
             * NetworkSpeedNotApplicableException - if network speed is too low.
         """
-        from pyspeedtest import SpeedTest
+        from pyspeedtest import SpeedTest, init_logging
 
         if self._speed_test is None:
-            self._speed_test = SpeedTest(host=self._config_tts['network_params']['test_download_destination'], runs=2)
+            init_logging()
+            self._speed_test = SpeedTest(host=self._config_tts['network_params']['test_download_destination'], runs=1)
 
         self.logger.debug("SpeedTest instance is ready.")
         try:
