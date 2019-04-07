@@ -52,6 +52,8 @@ class LoggableInterface(object):
     _console_formatter = None       # console logs formatter
 
     def __init__(self, name, level=INFO):
+        super(LoggableInterface, self).__init__()
+
         import logging
         from sys import stdout
 

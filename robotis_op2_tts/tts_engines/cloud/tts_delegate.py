@@ -19,7 +19,7 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         Extends:
             - Creates instance of specific TTS cloud client based on configuration and sets it as _client_tts.
         """
-        AbstractTTSClientDelegate.set_configuration(self, dict_config)
+        super(TTSCloudClientDelegate, self).set_configuration(dict_config)
 
         for str_name_tts, dict_config_tts in self._config_tts.items():
             if str_name_tts == 'google_cloud_tts':
