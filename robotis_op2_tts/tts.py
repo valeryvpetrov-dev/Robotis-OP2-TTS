@@ -24,9 +24,10 @@ if __name__ == '__main__':
     4. Call synthesize_* method. Passed source of text will be handled automatically.
     """
     from tts_client import RobotisOP2TTSClient
-    from cli.parser import parse_arguments
+    from cli.parser import CLIParser
 
-    dict_args = parse_arguments()
+    cli_parser = CLIParser()
+    dict_args = cli_parser.parse_arguments()
     str_path_file_config = dict_args["config"]
 
     tts = RobotisOP2TTSClient(str_path_file_config)
