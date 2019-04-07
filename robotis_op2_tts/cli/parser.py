@@ -68,17 +68,6 @@ def validate_text_source(args):
     logger.info("Text to speech was provided.")
 
 
-def validate_operation(args):
-    """
-    ""
-    Validates operation to do with passed text source.
-
-    :param args: parsed arguments.
-    :return: None (args can be modified).
-    """
-    return True
-
-
 def parse_arguments():
     """
     Parses program input arguments to dict.
@@ -110,7 +99,6 @@ def parse_arguments():
     try:
         validate_text_source(args)
         validate_configuration_file_path(args)
-        validate_operation(args)
     except RobotisOP2TTSException as e:
         logger.error(msg=str(e), exc_info=True)
         exit()
