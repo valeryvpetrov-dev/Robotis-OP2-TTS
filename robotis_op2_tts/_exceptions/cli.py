@@ -58,3 +58,11 @@ class NoSourceTextException(RobotisOP2TTSException):
     """
     def __init__(self):
         super(NoSourceTextException, self).__init__("There is no text to speech.")
+
+
+class InvalidCommandException(RobotisOP2TTSException):
+    """
+    Input command is not valid exception class.
+    """
+    def __init__(self, str_format_file_config):
+        super(InvalidCommandException, self).__init__("Command '%s' is not valid." % str_format_file_config)
