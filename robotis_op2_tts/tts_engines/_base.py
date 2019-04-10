@@ -49,7 +49,7 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
                                   self._str_path_output_dir)
                 pass
 
-    def _get_path_file_audio(self, source_text):
+    def get_path_file_audio(self, source_text):
         """
         Returns path to audio file with source_text pronounced.
 
@@ -69,7 +69,7 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
         self.logger.debug("Audio file path = %s", str_path_file_audio)
         return str_path_file_audio
 
-    def _is_audio_file_exist(self, str_path_file_audio):
+    def is_audio_file_exist(self, str_path_file_audio):
         """
         Checks whether audio file already exists.
 

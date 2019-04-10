@@ -37,39 +37,52 @@ class TTSCloudClientDelegate(AbstractTTSClientDelegate, InterfaceTTSCloudClient)
         """
         Implements corresponding method of interface parent class.
         """
-        if self.validate_network():
-            self.logger.info("Speech synthesis starts. Please, wait.")
-            self.logger.debug("It redirects call to %s.", self._client_tts)
-            str_file_audio = self._client_tts.synthesize_audio(source_text)
-            return str_file_audio
+        _str_path_file_audio = self._client_tts.get_path_file_audio(source_text)
+
+        # check if audio file is already synthesized
+        if self._client_tts.is_audio_file_exist(_str_path_file_audio):
+            self.logger.info("Audio file with synthesized speech already exists. Get it %s.", _str_path_file_audio)
+            return _str_path_file_audio
         else:
-            return None
+            if self.validate_network():
+                self.logger.info("Speech synthesis starts. Please, wait.")
+                self.logger.debug("It redirects call to %s.", self._client_tts)
+                str_file_audio = self._client_tts.synthesize_audio(source_text)
+                return str_file_audio
+            else:
+                return None
 
     def synthesize_speech(self, source_text):
         """
         Implements corresponding method of interface parent class.
         """
-        if self.validate_network():
-            self.logger.info("Speech synthesis starts. Please, wait.")
-            self.logger.debug("It redirects call to %s.", self._client_tts)
-            str_path_file_audio = self._client_tts.synthesize_audio(source_text)
+        str_path_file_audio = self._client_tts.get_path_file_audio(source_text)
 
-            if str_path_file_audio:
-                str_command_play_audio = self._str_command_play_audio.replace("{file}", str_path_file_audio)
-                self.logger.debug("It calls audio player to play audio.")
-
-                try:
-                    str_output_command_play_audio = subprocess.check_output(str_command_play_audio.split(' '),
-                                                                            stderr=subprocess.STDOUT).decode('utf-8')
-                    self.logger.debug("\n" + str_output_command_play_audio)
-                except subprocess.CalledProcessError as e:
-                    self.logger.error(msg=str(e), exc_info=True)
-                    exit()
+        # check if audio file is already synthesized
+        if self._client_tts.is_audio_file_exist(str_path_file_audio):
+            self.logger.info("Audio file with synthesized speech already exists. Get it %s.", str_path_file_audio)
+        else:
+            if self.validate_network():
+                self.logger.info("Speech synthesis starts. Please, wait.")
+                self.logger.debug("It redirects call to %s.", self._client_tts)
+                str_path_file_audio = self._client_tts.synthesize_audio(source_text)
             else:
                 return False
-            return True
+
+        if str_path_file_audio:
+            str_command_play_audio = self._str_command_play_audio.replace("{file}", str_path_file_audio)
+            self.logger.debug("It calls audio player to play audio.")
+
+            try:
+                str_output_command_play_audio = subprocess.check_output(str_command_play_audio.split(' '),
+                                                                        stderr=subprocess.STDOUT).decode('utf-8')
+                self.logger.debug("\n" + str_output_command_play_audio)
+            except subprocess.CalledProcessError as e:
+                self.logger.error(msg=str(e), exc_info=True)
+                exit()
         else:
             return False
+        return True
 
     def validate_configuration(self, dict_config):
         """

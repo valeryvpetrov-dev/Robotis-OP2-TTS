@@ -76,58 +76,57 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         urllib3.disable_warnings()
 
         # generate output file path and name
-        str_path_file_audio = self._get_path_file_audio(source_text)
+        str_path_file_audio = self.get_path_file_audio(source_text)
 
-        # check if audio file is already synthesized
-        if self._is_audio_file_exist(str_path_file_audio):
-            self.logger.info("Audio file with synthesized speech already exists. Get it %s.", str_path_file_audio)
-            return str_path_file_audio
-        else:
-            # creates audio file corresponding to source text
-            file_audio = open(str_path_file_audio, 'wb')
-            self.logger.debug("Speech will be written to %s.", str_path_file_audio)
+        # creates audio file corresponding to source text
+        file_audio = open(str_path_file_audio, 'wb')
+        self.logger.debug("Speech will be written to %s.", str_path_file_audio)
 
-            if hasattr(source_text, 'read'):  # if source_text is represented as file
-                try:
-                    source_text = source_text.read()
-                except UnicodeDecodeError as e:      # if source text file is not text file
-                    self.logger.error(msg=str(e), exc_info=True)
-                    exit()
-                self.logger.debug("Source text is represented as file, read content.")
-
-            # set the text input to be synthesized
-            synthesis_input = texttospeech.types.SynthesisInput(text=source_text)
-
-            # select voice params
-            voice = texttospeech.types.VoiceSelectionParams(
-                language_code=self._config_tts['call_params']['language_code'],
-                name=self._config_tts['call_params']['name'])
-            self.logger.debug("Voice params: \n%s", voice)
-
-            # select the type of audio file you want returned
-            audio_config = texttospeech.types.AudioConfig(
-                audio_encoding=self._str_to_audioencoding(self._str_format_file_audio),
-                speaking_rate=self._config_tts['call_params']['speaking_rate'],
-                pitch=self._config_tts['call_params']['pitch'],
-                effects_profile_id=self._config_tts['call_params']['effects_profile_id']
-            )
-            self.logger.debug("Audio params: \n%s", audio_config)
-
-            # perform the text-to-speech request on the text input with the selected voice parameters and audio file type
-            # the response's audio_content is binary
+        if hasattr(source_text, 'read'):  # if source_text is represented as file
             try:
-                response = self._client_tts.synthesize_speech(synthesis_input, voice, audio_config)
-            except GoogleAPICallError as e:
+                source_text = source_text.read()
+            except UnicodeDecodeError as e:      # if source text file is not text file
                 self.logger.error(msg=str(e), exc_info=True)
                 exit()
+            self.logger.debug("Source text is represented as file, read content.")
 
-            self.logger.debug("Response is gotten.")
+        # check if source text is marked up with SSML
+        bool_is_ssml = self._is_str_marked_up_ssml(source_text)
+        # set the text input to be synthesized
+        if bool_is_ssml:
+            synthesis_input = texttospeech.types.SynthesisInput(ssml=source_text)
+        else:
+            synthesis_input = texttospeech.types.SynthesisInput(text=source_text)
 
-            # write the response to the output file
-            file_audio.write(response.audio_content)
-            self.logger.debug("Response is writen to file.")
+        # select voice params
+        voice = texttospeech.types.VoiceSelectionParams(
+            language_code=self._config_tts['call_params']['language_code'],
+            name=self._config_tts['call_params']['name'])
+        self.logger.debug("Voice params: \n%s", voice)
 
-            return str_path_file_audio
+        # select the type of audio file you want returned
+        audio_config = texttospeech.types.AudioConfig(
+            audio_encoding=self._str_to_audioencoding(self._str_format_file_audio),
+            speaking_rate=self._config_tts['call_params']['speaking_rate'],
+            pitch=self._config_tts['call_params']['pitch'],
+            effects_profile_id=self._config_tts['call_params']['effects_profile_id'])
+        self.logger.debug("Audio params: \n%s", audio_config)
+
+        # perform the text-to-speech request on the text input with the selected voice parameters and audio file type
+        # the response's audio_content is binary
+        try:
+            response = self._client_tts.synthesize_speech(synthesis_input, voice, audio_config)
+        except GoogleAPICallError as e:
+            self.logger.error(msg=str(e), exc_info=True)
+            exit()
+
+        self.logger.debug("Response is gotten.")
+
+        # write the response to the output file
+        file_audio.write(response.audio_content)
+        self.logger.debug("Response is writen to file.")
+
+        return str_path_file_audio
 
     def synthesize_speech(self, source_text):
         """
