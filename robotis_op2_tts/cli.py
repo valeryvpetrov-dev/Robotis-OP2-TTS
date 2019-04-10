@@ -4,14 +4,15 @@ from _exceptions.cli import *
 from base import LoggableInterface
 
 
-class CLIParser(LoggableInterface):
+class CLI(LoggableInterface):
     """
     CLI parser class.
         - It is responsible for CLI interaction with operator.
     """
+    LIST_COMMANDS = ["say", "save", "exit"]
 
     def __init__(self):
-        super(CLIParser, self).__init__(name=self.__class__.__name__)
+        super(CLI, self).__init__(name=self.__class__.__name__)
 
     def parse_arguments(self):
         """
@@ -19,8 +20,6 @@ class CLIParser(LoggableInterface):
 
         Arguments dictionary keys:
         - config - string path to configuration file.
-        - text - source text to speech.
-        - file - file with source text to speech.
 
         * argparse module is responsible for parsing input arguments.
         * All passed params will be validated.
@@ -32,12 +31,6 @@ class CLIParser(LoggableInterface):
 
         parser = argparse.ArgumentParser(description="Robotis OP2 Text-to-Speech (TTS) client. "
                                                      "To learn more visit: https://github.com/valera0798/Robotis-OP2-TTS")
-        parser.add_argument('operation', type=str, choices=["play", "save"],
-                            default="play",  # default choice
-                            nargs='?',  # allows not to provide value, default will be used
-                            help="operation to do with passed text source.")
-        parser.add_argument('-t', '--text', type=str, help="text to synthesize speech.")
-        parser.add_argument('-f', '--file', type=str, help="path to text file with content to synthesize speech.")
         parser.add_argument('-c', '--config', type=str, help="path to TTS configuration file.")
         args = parser.parse_args()
 
@@ -57,8 +50,7 @@ class CLIParser(LoggableInterface):
         :return: bool - validation result. (True - valid, False - invalid)
         """
         try:
-            bool_result = self._validate_configuration_file_path(args) and \
-                          self._validate_text_source(args)
+            bool_result = self._validate_configuration_file_path(args)
             if bool_result:
                 self.logger.info("Superficial validation of arguments succeeds.")
             else:
@@ -130,3 +122,38 @@ class CLIParser(LoggableInterface):
             pass
         self.logger.info("Text to speech was provided.")
         return True
+
+    def read_command(self):
+        """
+        Reads user command from CLI.
+
+        :return: tuple - (string command, list of arguments related ot command).
+        """
+        str_input = raw_input("tts> ")
+        list_input = str_input.split(" ", 1)
+        str_command = str(list_input[0])
+        list_args = list_input[1:]
+
+        try:
+            if self._validate_command(str_command):
+                return str_command, list_args
+        except RobotisOP2TTSException as e:
+            self.logger.error(msg=str(e), exc_info=False)
+            return None
+
+    def _validate_command(self, str_command):
+        """
+        Validates input command.
+
+        :raises:
+            * InvalidCommandException - if command is not valid.
+        :param str_command: user input command.
+        :return: bool - True (valid), False (invalid).
+        """
+        bool_result = str_command in self.LIST_COMMANDS
+        if bool_result:
+            self.logger.debug("Input command is valid.")
+            return bool_result
+        else:
+            self.logger.debug("Input command is not valid.")
+            raise InvalidCommandException(str_command)
