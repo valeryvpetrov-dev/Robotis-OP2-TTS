@@ -3,7 +3,7 @@ if __name__ == '__main__':
     Robotis OP2 Text-to-Speech (TTS) client general usage script.
 
     1. Create TTS configuration and place it inside ./config;
-    2. Pass path to configuration file and text (string or file) as params to program;
+    2. Pass path to configuration file as params to program;
         You can get support:
 
             $ python tts.py -h
@@ -18,30 +18,47 @@ if __name__ == '__main__':
               -f FILE, --file FILE  path to text file with content to synthesize speech.
               -c CONFIG, --config CONFIG
                                     path to TTS configuration file.
-
-    3. Create RobotisOP2TTS object;
-    4. Set TTS configuration to object;
-    4. Call synthesize_* method. Passed source of text will be handled automatically.
+    
+    3. In the start of session 
+        3.1. Create RobotisOP2TTS object;
+    4. Input commands in CLI to call specific methods of RobotisOP2TTS instance.
+        - Available commands:
+            ~ say <source_text(string/file)>    - real time speech synthesis.
+            ~ save <source_text(string/file)>   - speech audio file synthesis.
+            ~ exit                              - to end current session.
     """
     from tts_client import RobotisOP2TTSClient
-    from cli.parser import CLIParser
+    from cli import CLI
+    import re
 
-    cli_parser = CLIParser()
-    dict_args = cli_parser.parse_arguments()
+    cli = CLI()
+    dict_args = cli.parse_arguments()
     str_path_file_config = dict_args["config"]
 
     tts = RobotisOP2TTSClient(str_path_file_config)
 
-    if dict_args.get("text"):
-        str_text = dict_args["text"]
-        if dict_args.get("operation") == "play":
-            tts.synthesize_speech(str_text)
-        elif dict_args.get("operation") == "save":
-            str_path_file_audio = tts.synthesize_audio(str_text)
-    elif dict_args.get("file"):
-        file_text = open(dict_args["file"], 'r')
-        if dict_args.get("operation") == "play":
-            tts.synthesize_speech(file_text)
-        elif dict_args.get("operation") == "save":
-            str_path_file_audio = tts.synthesize_audio(file_text)
-        file_text.close()
+    regex_file = re.compile(r'(\/.*?\.[\w:]+)')
+    source_text = None
+    bool_is_session_opened = True
+    cli.logger.info("Session has been begun.")
+    while bool_is_session_opened:
+        tuple_str_command_list_args = cli.read_command()
+        if tuple_str_command_list_args:
+            str_command = tuple_str_command_list_args[0]
+            list_args = tuple_str_command_list_args[1]
+            if str_command == 'exit':
+                bool_is_session_opened = False
+            else:
+                if regex_file.match(list_args[0]):
+                    source_text = open(list_args[0])
+                else:
+                    source_text = list_args[0]
+
+                if str_command == 'say':
+                    tts.synthesize_speech(source_text)
+                elif str_command == 'save':
+                    tts.synthesize_audio(source_text)
+    cli.logger.info("Session has been ended.")
+    if source_text:
+        if hasattr(source_text, 'read'):
+            source_text.close()
