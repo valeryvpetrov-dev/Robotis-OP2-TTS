@@ -126,6 +126,3 @@ data/
 
 # operational directory for source texts
 input/
-
-# configurations
-config/
