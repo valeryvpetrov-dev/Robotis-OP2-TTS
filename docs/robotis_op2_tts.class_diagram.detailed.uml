@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>Python</ID>
+  <OriginalElement>#/home/valery/Robotics/Robotis_OP2/Robotis_OP2_TTS/dev/robotis_op2_tts</OriginalElement>
+  <nodes>
+    <node x="600.0" y="916.0">tts_client.RobotisOP2TTSClient</node>
+    <node x="3129.782852564102" y="1144.5">tts_engines.cloud._base.InterfaceTTSCloudClient</node>
+    <node x="2932.3149038461534" y="1632.0">tts_engines.cloud.tts_delegate.TTSCloudClientDelegate</node>
+    <node x="1615.75" y="1156.5">tts_engines.onboard._base.InterfaceTTSOnboardClient</node>
+    <node x="1105.0" y="1048.0">tts_engines._base.AbstractTTSClient</node>
+    <node x="2503.6939102564097" y="1072.0">tts_engines._base.AbstractTTSClientDelegate</node>
+    <node x="2127.6939102564097" y="1488.0">tts_engines.cloud.google_cloud.tts_client.TTSGoogleCloudClient</node>
+    <node x="741.625" y="616.0">base.LoggableInterface</node>
+    <node x="3583.532852564102" y="640.0">BaseException</node>
+    <node x="1650.6939102564097" y="1644.0">tts_engines.onboard.tts_delegate.TTSOnboardClientDelegate</node>
+    <node x="220.0" y="1096.5">cli.parser.CLIParser</node>
+    <node x="3809.5439102564096" y="1144.5">_exceptions.base.RobotisOP2TTSException</node>
+    <node x="892.1939102564097" y="1548.0">tts_engines.onboard.festival.tts_client.TTSFestivalClient</node>
+    <node x="2381.332051282051" y="78.0">object</node>
+    <node x="2316.5649038461534" y="664.5">base.InterfaceTTSClient</node>
+  </nodes>
+  <notes>
+    <note x="2247.6939102564097" y="1158.0">
+      <node>tts_engines.cloud.google_cloud.tts_client.TTSGoogleCloudClient</node>
+      <value>Google Cloud TTS client.</value>
+      <edge>
+        <point x="0.0" y="-232.0" />
+        <point x="0.0" y="14.0" />
+      </edge>
+    </note>
+    <note x="491.5625" y="702.0">
+      <node>tts_client.RobotisOP2TTSClient</node>
+      <value>Basic client class.</value>
+      <edge>
+        <point x="-161.66666666666652" y="-256.0" />
+        <point x="680.8333333333335" y="886.0" />
+        <point x="587.0625" y="886.0" />
+        <point x="0.0" y="14.0" />
+      </edge>
+    </note>
+    <note x="672.875" y="308.0">
+      <node>base.LoggableInterface</node>
+      <value>Provides logging facilities.</value>
+      <edge>
+        <point x="-67.25" y="-100.0" />
+        <point x="0.0" y="14.0" />
+      </edge>
+    </note>
+    <note x="2718.6482371794864" y="675.0">
+      <node>tts_engines._base.AbstractTTSClientDelegate</node>
+      <value>Parent class of all TTS client delegates.\n- Implementations are used in RobotisOP2TTSClient\n- Aggregates specific TTS client implementation\n- Provides same interface as specific TTS client</value>
+      <edge>
+        <point x="114.66666666666674" y="-100.0" />
+        <point x="2790.3605769230767" y="896.0" />
+        <point x="2949.1482371794864" y="896.0" />
+        <point x="0.0" y="41.0" />
+      </edge>
+    </note>
+    <note x="1076.5" y="702.0">
+      <node>tts_engines._base.AbstractTTSClient</node>
+      <value>Parent class of all specifc TTS clients.</value>
+      <edge>
+        <point x="0.0" y="-124.0" />
+        <point x="0.0" y="14.0" />
+      </edge>
+    </note>
+    <note x="0.0" y="1158.0">
+      <node>tts_engines.onboard.festival.tts_client.TTSFestivalClient</node>
+      <value>Festival TTS client.</value>
+      <edge>
+        <point x="-139.66666666666652" y="-172.0" />
+        <point x="962.0272435897432" y="1468.0" />
+        <point x="100.0" y="1468.0" />
+        <point x="0.0" y="14.0" />
+      </edge>
+    </note>
+    <note x="3905.532852564102" y="702.0">
+      <node>_exceptions.base.RobotisOP2TTSException</node>
+      <value>Parent of all Robotis OP2 TTS application exceptions.</value>
+      <edge>
+        <point x="82.25" y="-27.5" />
+        <point x="4056.2939102564096" y="896.0" />
+        <point x="4154.032852564102" y="896.0" />
+        <point x="0.0" y="14.0" />
+      </edge>
+    </note>
+    <note x="1476.5" y="702.0">
+      <node>tts_engines.onboard._base.InterfaceTTSOnboardClient</node>
+      <value>Declares onboard TTS specification.</value>
+      <edge>
+        <point x="-102.5" y="-15.5" />
+        <point x="1718.25" y="866.0" />
+        <point x="1644.0" y="866.0" />
+        <point x="0.0" y="14.0" />
+      </edge>
+    </note>
+    <note x="187.5" y="702.0">
+      <node>cli.parser.CLIParser</node>
+      <value>Operator commands parser.</value>
+      <edge>
+        <point x="-90.0" y="-75.5" />
+        <point x="0.0" y="14.0" />
+      </edge>
+    </note>
+    <note x="2415.832051282051" y="0.0">
+      <node>object</node>
+      <value>New-style Python classes.</value>
+      <edge>
+        <point x="0.0" y="-244.0" />
+        <point x="0.0" y="14.0" />
+      </edge>
+    </note>
+    <note x="3246.532852564102" y="702.0">
+      <node>tts_engines.cloud._base.InterfaceTTSCloudClient</node>
+      <value>Declares cloud TTS specification.</value>
+      <edge>
+        <point x="91.75" y="-27.5" />
+        <point x="0.0" y="14.0" />
+      </edge>
+    </note>
+  </notes>
+  <edges>
+    <edge source="tts_engines.onboard.tts_delegate.TTSOnboardClientDelegate" target="tts_engines._base.AbstractTTSClientDelegate">
+      <point x="114.25" y="-76.0" />
+      <point x="1993.4439102564097" y="1458.0" />
+      <point x="2589.6939102564097" y="1458.0" />
+      <point x="-86.0" y="100.0" />
+    </edge>
+    <edge source="tts_engines._base.AbstractTTSClientDelegate" target="base.InterfaceTTSClient">
+      <point x="0.0" y="-100.0" />
+      <point x="2675.6939102564097" y="846.0" />
+      <point x="2548.9649038461534" y="846.0" />
+      <point x="66.40000000000009" y="51.5" />
+    </edge>
+    <edge source="tts_engines.onboard.festival.tts_client.TTSFestivalClient" target="tts_engines._base.AbstractTTSClient">
+      <point x="0.0" y="-172.0" />
+      <point x="1101.6939102564097" y="1468.0" />
+      <point x="1185.75" y="1468.0" />
+      <point x="-80.75" y="124.0" />
+    </edge>
+    <edge source="tts_engines._base.AbstractTTSClientDelegate" target="base.LoggableInterface">
+      <point x="-114.66666666666674" y="-100.0" />
+      <point x="2561.027243589743" y="856.0" />
+      <point x="977.0" y="856.0" />
+      <point x="100.875" y="100.0" />
+    </edge>
+    <edge source="tts_engines.cloud._base.InterfaceTTSCloudClient" target="base.InterfaceTTSClient">
+      <point x="-91.75" y="-27.5" />
+      <point x="3221.532852564102" y="836.0" />
+      <point x="2615.3649038461535" y="836.0" />
+      <point x="132.80000000000018" y="51.5" />
+    </edge>
+    <edge source="tts_engines.cloud.tts_delegate.TTSCloudClientDelegate" target="tts_engines.cloud._base.InterfaceTTSCloudClient">
+      <point x="103.49999999999977" y="-88.0" />
+      <point x="3242.8149038461534" y="1468.0" />
+      <point x="3405.032852564102" y="1468.0" />
+      <point x="91.75" y="27.5" />
+    </edge>
+    <edge source="cli.parser.CLIParser" target="base.LoggableInterface">
+      <point x="90.0" y="-75.5" />
+      <point x="490.0" y="896.0" />
+      <point x="775.25" y="896.0" />
+      <point x="-100.875" y="100.0" />
+    </edge>
+    <edge source="tts_engines.cloud.google_cloud.tts_client.TTSGoogleCloudClient" target="tts_engines._base.AbstractTTSClient">
+      <point x="-158.66666666666652" y="-232.0" />
+      <point x="2207.027243589743" y="1448.0" />
+      <point x="1347.25" y="1448.0" />
+      <point x="80.75" y="124.0" />
+    </edge>
+    <edge source="base.LoggableInterface" target="object">
+      <point x="67.25" y="-100.0" />
+      <point x="943.375" y="591.0" />
+      <point x="2433.6653846153845" y="591.0" />
+      <point x="-104.66666666666652" y="244.0" />
+    </edge>
+    <edge source="tts_engines.onboard.festival.tts_client.TTSFestivalClient" target="tts_engines.onboard._base.InterfaceTTSOnboardClient">
+      <point x="139.66666666666652" y="-172.0" />
+      <point x="1241.3605769230762" y="1468.0" />
+      <point x="1718.25" y="1468.0" />
+      <point x="-102.5" y="15.5" />
+    </edge>
+    <edge source="tts_client.RobotisOP2TTSClient" target="base.LoggableInterface">
+      <point x="0.0" y="-256.0" />
+      <point x="-33.625" y="100.0" />
+    </edge>
+    <edge source="_exceptions.base.RobotisOP2TTSException" target="BaseException">
+      <point x="-82.25" y="-27.5" />
+      <point x="3891.7939102564096" y="896.0" />
+      <point x="3734.532852564102" y="896.0" />
+      <point x="0.0" y="76.0" />
+    </edge>
+    <edge source="tts_engines.onboard._base.InterfaceTTSOnboardClient" target="base.InterfaceTTSClient">
+      <point x="102.5" y="-15.5" />
+      <point x="1923.25" y="896.0" />
+      <point x="2482.5649038461534" y="896.0" />
+      <point x="0.0" y="51.5" />
+    </edge>
+    <edge source="base.InterfaceTTSClient" target="object">
+      <point x="0.0" y="-51.5" />
+      <point x="2482.5649038461534" y="591.0" />
+      <point x="2538.332051282051" y="591.0" />
+      <point x="0.0" y="244.0" />
+    </edge>
+    <edge source="BaseException" target="object">
+      <point x="0.0" y="-76.0" />
+      <point x="3734.532852564102" y="591.0" />
+      <point x="2642.9987179487175" y="591.0" />
+      <point x="104.66666666666652" y="244.0" />
+    </edge>
+    <edge source="tts_engines.cloud.google_cloud.tts_client.TTSGoogleCloudClient" target="tts_engines.cloud._base.InterfaceTTSCloudClient">
+      <point x="158.66666666666652" y="-232.0" />
+      <point x="2524.360576923076" y="1468.0" />
+      <point x="3221.532852564102" y="1468.0" />
+      <point x="-91.75" y="27.5" />
+    </edge>
+    <edge source="tts_engines.onboard.tts_delegate.TTSOnboardClientDelegate" target="tts_engines.onboard._base.InterfaceTTSOnboardClient">
+      <point x="-114.25" y="-76.0" />
+      <point x="1764.9439102564097" y="1468.0" />
+      <point x="1923.25" y="1468.0" />
+      <point x="102.5" y="15.5" />
+    </edge>
+    <edge source="tts_client.RobotisOP2TTSClient" target="base.InterfaceTTSClient">
+      <point x="161.66666666666652" y="-256.0" />
+      <point x="1004.1666666666665" y="876.0" />
+      <point x="2349.764903846153" y="876.0" />
+      <point x="-132.80000000000018" y="51.5" />
+    </edge>
+    <edge source="tts_engines._base.AbstractTTSClient" target="base.InterfaceTTSClient">
+      <point x="107.66666666666652" y="-124.0" />
+      <point x="1374.1666666666665" y="886.0" />
+      <point x="2416.1649038461533" y="886.0" />
+      <point x="-66.40000000000009" y="51.5" />
+    </edge>
+    <edge source="tts_engines._base.AbstractTTSClient" target="base.LoggableInterface">
+      <point x="-107.66666666666652" y="-124.0" />
+      <point x="1158.8333333333335" y="866.0" />
+      <point x="909.75" y="866.0" />
+      <point x="33.625" y="100.0" />
+    </edge>
+    <edge source="tts_engines.cloud.tts_delegate.TTSCloudClientDelegate" target="tts_engines._base.AbstractTTSClientDelegate">
+      <point x="-103.50000000000023" y="-88.0" />
+      <point x="3035.8149038461534" y="1458.0" />
+      <point x="2761.6939102564097" y="1458.0" />
+      <point x="86.0" y="100.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.2126634549208534" x="2169.5" y="966.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+</Diagram>
+
