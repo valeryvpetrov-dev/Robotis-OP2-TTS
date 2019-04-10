@@ -86,6 +86,16 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
             self.logger.debug("%s audio file does not exist yet.", str_path_file_audio)
             return False
 
+    def _is_str_marked_up_ssml(self, str_text):
+        """
+        Validates if string is marked up with SSML tags.
+            - Each particular TTS client implements its own specification.
+
+        :param str_text: string to check markup.
+        :return: bool - True (marked up), False (is not marked up).
+        """
+        pass
+
 
 class AbstractTTSClientDelegate(InterfaceTTSClient, LoggableInterface):
     """

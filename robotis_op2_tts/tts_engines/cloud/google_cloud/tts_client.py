@@ -14,6 +14,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         - Google Cloud TTS specification of InterfaceTTSCloudClient.
         - Has structure like AbstractTTSClient.
         - Behaves like InterfaceTTSCloudClient.
+        - Support SSML for source text.
     """
     # required params to call Google Cloud TTS
     LIST_CALL_PARAMS_REQUIRED = ['language_code', 'name', 'speaking_rate', 'pitch', 'effects_profile_id']
@@ -239,7 +240,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
 
         if self._speed_test is None:
             init_logging()
-            self._speed_test = SpeedTest(host=self._config_tts['network_params']['test_download_destination'], runs=1)
+            self._speed_test = SpeedTest(host=self._config_tts['network_params']['test_download_destination'], runs=2)
 
         self.logger.debug("SpeedTest instance is ready.")
         try:
@@ -254,9 +255,23 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
             if float_download_speed < self.FLOAT_SPEED_DOWNLOAD_MIN:
                 raise NetworkSpeedNotApplicableException()
             self.logger.debug("Download speed = %s, bits/sec", float_download_speed)
-        except Exception as e:  # connection to Internet is not established
+        except TTSGoogleCloudException as e:  # connection to Internet is not established
             self.logger.warn("No access to Internet.")
             return False
 
         self.logger.debug("Network validation succeeds.")
         return True
+
+    def _is_str_marked_up_ssml(self, str_text):
+        """
+        Implements corresponding method of interface parent class.
+
+        * Details: https://cloud.google.com/text-to-speech/docs/ssml
+        """
+        bool_result = str_text.startswith("<speak>") and str_text.endswith("</speak>")
+        # TODO full validation of Google Cloud TTS SSML specification
+        if bool_result:
+            self.logger.debug("%s is marked up with SSML.")
+        else:
+            self.logger.debug("%s is not marked up with SSML.")
+        return bool_result
