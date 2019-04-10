@@ -51,38 +51,44 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
                 * It is enough to set '(language_related_voice)'.
                 * Details: http://www.linuxcertif.com/man/1/text2wave/
         """
-        from io import TextIOBase
         import subprocess
 
+        # generate output file path and name
         str_path_file_audio = self._get_path_file_audio(source_text)
-        self.logger.debug("Speech will be written to %s.", str_path_file_audio)
 
-        if isinstance(source_text, TextIOBase):     # if source_text is represented as file
-            try:
-                source_text = source_text.read()
-            except UnicodeDecodeError as e:         # if source text file is not text file
-                self.logger.error(msg=str(e), exc_info=True)
-                exit()
-            self.logger.debug("Source text is represented as file, read content.")
-
-        try:
-            _str_command_save_speech = self._str_command_save_speech.replace("{text}", source_text)
-            _str_command_save_speech = _str_command_save_speech.replace("{file}", str_path_file_audio)
-            _int_code_result = subprocess.check_call(
-                _str_command_save_speech,
-                stderr=subprocess.STDOUT,
-                shell=True      # security hazard
-            )
-        except subprocess.CalledProcessError as e:
-            self.logger.error(msg=str(e), exc_info=True)
-            exit()
-
-        if _int_code_result == 0:   # success
-            self.logger.debug("Synthesized speech is writen to file.")
+        # check if audio file is already synthesized
+        if self._is_audio_file_exist(str_path_file_audio):
+            self.logger.info("Audio file with synthesized speech already exists. Get it %s.", str_path_file_audio)
             return str_path_file_audio
         else:
-            self.logger.debug("Speech is not synthesized to file.")
-            return None
+            self.logger.debug("Speech will be written to %s.", str_path_file_audio)
+
+            if hasattr(source_text, 'read'):     # if source_text is represented as file
+                try:
+                    source_text = source_text.read()
+                except UnicodeDecodeError as e:         # if source text file is not text file
+                    self.logger.error(msg=str(e), exc_info=True)
+                    exit()
+                self.logger.debug("Source text is represented as file, read content.")
+
+            try:
+                _str_command_save_speech = self._str_command_save_speech.replace("{text}", source_text)
+                _str_command_save_speech = _str_command_save_speech.replace("{file}", str_path_file_audio)
+                _int_code_result = subprocess.check_call(
+                    _str_command_save_speech,
+                    stderr=subprocess.STDOUT,
+                    shell=True      # security hazard
+                )
+            except subprocess.CalledProcessError as e:
+                self.logger.error(msg=str(e), exc_info=True)
+                exit()
+
+            if _int_code_result == 0:   # success
+                self.logger.debug("Synthesized speech is written to file.")
+                return str_path_file_audio
+            else:
+                self.logger.debug("Speech is not synthesized to file.")
+                return None
 
     def synthesize_speech(self, source_text):
         """
@@ -93,10 +99,9 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
                 * Festival TTS must support this language.
                 * Details: https://linux.die.net/man/1/festival
         """
-        from io import TextIOBase
         import subprocess
 
-        if isinstance(source_text, TextIOBase):  # if source_text is represented as file
+        if hasattr(source_text, 'read'):  # if source_text is represented as file
             try:
                 source_text = source_text.read()
             except UnicodeDecodeError as e:      # if source text file is not text file

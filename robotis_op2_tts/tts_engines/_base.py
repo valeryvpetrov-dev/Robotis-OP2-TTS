@@ -56,12 +56,11 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
         :param source_text: source text to synthesize speech.
         :return: str - path to audio file.
         """
-        from io import TextIOBase
         from os.path import basename, join
         import datetime
 
         # creates audio file corresponding to source text
-        if isinstance(source_text, TextIOBase):             # if source_text is represented as file
+        if hasattr(source_text, 'read'):             # if source_text is represented as file
             _str_name_file_audio = basename(source_text.name).split(".")[0]
         else:                                               # if source_text is represented as string
             _str_name_file_audio = datetime.datetime.now().strftime("%Y-%m-%d.%H:%M:%S")
@@ -69,6 +68,23 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
         str_path_file_audio = join(self._str_path_output_dir, _str_name_file_audio)
         self.logger.debug("Audio file path = %s", str_path_file_audio)
         return str_path_file_audio
+
+    def _is_audio_file_exist(self, str_path_file_audio):
+        """
+        Checks whether audio file already exists.
+
+        :param str_path_file_audio: string path to audio file to check.
+        :return: bool - True (exists), False (does not exist).
+        """
+        from os.path import exists
+        from os import stat
+
+        if exists(str_path_file_audio) and stat(str_path_file_audio).st_size > 0:
+            self.logger.debug("%s audio file already exists.", str_path_file_audio)
+            return True
+        else:
+            self.logger.debug("%s audio file does not exist yet.", str_path_file_audio)
+            return False
 
 
 class AbstractTTSClientDelegate(InterfaceTTSClient, LoggableInterface):
