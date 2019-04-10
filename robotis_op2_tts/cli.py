@@ -9,7 +9,7 @@ class CLI(LoggableInterface):
     CLI parser class.
         - It is responsible for CLI interaction with operator.
     """
-    LIST_COMMANDS = ["say", "save", "exit"]
+    LIST_COMMANDS = ["say", "save", "exit", "help"]
 
     def __init__(self):
         super(CLI, self).__init__(name=self.__class__.__name__)
@@ -157,3 +157,18 @@ class CLI(LoggableInterface):
         else:
             self.logger.debug("Input command is not valid.")
             raise InvalidCommandException(str_command)
+
+    def print_prompt(self):
+        """
+        Prints prompt message.
+
+        :return: None (prompt will be printed).
+        """
+        print "Robotis OP2 Text-to-Speech (TTS) client. To learn more visit:\n" \
+              "https://github.com/valera0798/Robotis-OP2-TTS" \
+              "usage: <command> [arguments] \n " \
+              "Available commands:\n" \
+              "\thelp                     - show this help message.\n" \
+              "\tsay [string/file path]   - speaks passed text from source.\n" \
+              "\tsave [string/file path]  - saves synthesized text to file.\n" \
+              "\texit                     - ends current session.\n"

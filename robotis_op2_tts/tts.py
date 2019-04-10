@@ -7,7 +7,7 @@ if __name__ == '__main__':
         You can get support:
 
             $ python tts.py -h
-            usage: tts.py [-h] [-t TEXT] [-f FILE] [-c CONFIG]
+            usage: tts.py [-h] [-c CONFIG]
 
             Robotis OP2 Text-to-Speech (TTS) client. To learn more visit:
             https://github.com/valera0798/Robotis-OP2-TTS
@@ -15,17 +15,20 @@ if __name__ == '__main__':
             optional arguments:
               -h, --help            show this help message and exit
               -t TEXT, --text TEXT  text to synthesize speech.
-              -f FILE, --file FILE  path to text file with content to synthesize speech.
-              -c CONFIG, --config CONFIG
-                                    path to TTS configuration file.
     
     3. In the start of session 
         3.1. Create RobotisOP2TTS object;
     4. Input commands in CLI to call specific methods of RobotisOP2TTS instance.
-        - Available commands:
-            ~ say <source_text(string/file)>    - real time speech synthesis.
-            ~ save <source_text(string/file)>   - speech audio file synthesis.
-            ~ exit                              - to end current session.
+        You can get support:
+            
+            tts> help
+            Robotis OP2 Text-to-Speech (TTS) client. To learn more visit:
+            https://github.com/valera0798/Robotis-OP2-TTSusage: <command> [arguments] 
+            Available commands:
+                help                     - show this help message.
+                say [string/file path]   - speaks passed text from source.
+                save [string/file path]  - saves synthesized text to file.
+                exit                     - ends current session.
     """
     from tts_client import RobotisOP2TTSClient
     from cli import CLI
@@ -48,6 +51,8 @@ if __name__ == '__main__':
             list_args = tuple_str_command_list_args[1]
             if str_command == 'exit':
                 bool_is_session_opened = False
+            elif str_command == 'help':
+                cli.print_prompt()
             else:
                 if regex_file.match(list_args[0]):
                     source_text = open(list_args[0])
@@ -58,6 +63,7 @@ if __name__ == '__main__':
                     tts.synthesize_speech(source_text)
                 elif str_command == 'save':
                     tts.synthesize_audio(source_text)
+
     cli.logger.info("Session has been ended.")
     if source_text:
         if hasattr(source_text, 'read'):
