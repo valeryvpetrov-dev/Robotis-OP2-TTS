@@ -128,4 +128,4 @@ data/
 input/
 
 # configurations
-config/
+robotis_op2_tts/config/**/*.json
