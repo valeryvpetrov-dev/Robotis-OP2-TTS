@@ -184,7 +184,7 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
             import re
             try:
                 _str_path_file_share_festival_languages = '/usr/share/festival/languages.scm'
-                _str_keyword = r'define \(language_\w*%s\)' % _str_name_language    # language definition line pattern
+                _str_keyword = r'\(?define \(language_\w*%s\)' % _str_name_language    # language definition line pattern
                 regex_language = re.compile(_str_keyword)
                 _file_languages = open(_str_path_file_share_festival_languages, 'r')
                 for _str_line in _file_languages:
