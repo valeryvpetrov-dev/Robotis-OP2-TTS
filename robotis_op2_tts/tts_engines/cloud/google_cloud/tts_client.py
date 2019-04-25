@@ -85,6 +85,7 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
         if hasattr(source_text, 'read'):  # if source_text is represented as file
             try:
                 source_text = source_text.read()
+                source_text = source_text.read().strip()
             except UnicodeDecodeError as e:      # if source text file is not text file
                 self.logger.error(msg=str(e), exc_info=True)
                 exit()
@@ -243,19 +244,23 @@ class TTSGoogleCloudClient(AbstractTTSClient, InterfaceTTSCloudClient):
 
         self.logger.debug("SpeedTest instance is ready.")
         try:
-            # returns latency in ms
-            float_latency = self._speed_test.ping(self._config_tts['network_params']['test_ping_destination'])
-            if float_latency > self.FLOAT_LATENCY_MAX:
-                raise NetworkNotAccessibleException()
-            self.logger.debug("Ping latency = %s, ms", float_latency)
+            try:
+                # returns latency in ms
+                float_latency = self._speed_test.ping(self._config_tts['network_params']['test_ping_destination'])
+                if float_latency > self.FLOAT_LATENCY_MAX:
+                    raise NetworkNotAccessibleException()
+                self.logger.debug("Ping latency = %s, ms", float_latency)
 
-            # returns download speed in bits/sec
-            float_download_speed = self._speed_test.download()
-            if float_download_speed < self.FLOAT_SPEED_DOWNLOAD_MIN:
-                raise NetworkSpeedNotApplicableException()
-            self.logger.debug("Download speed = %s, bits/sec", float_download_speed)
-        except TTSGoogleCloudException as e:  # connection to Internet is not established
-            self.logger.warn("No access to Internet.")
+                # returns download speed in bits/sec
+                float_download_speed = self._speed_test.download()
+                if float_download_speed < self.FLOAT_SPEED_DOWNLOAD_MIN:
+                    raise NetworkSpeedNotApplicableException()
+                self.logger.debug("Download speed = %s, bits/sec", float_download_speed)
+            except TTSGoogleCloudException as e:  # connection to Internet is not established
+                self.logger.warn("No access to Internet.")
+                return False
+        except Exception as e:
+            self.logger.warn(e.message)
             return False
 
         self.logger.debug("Network validation succeeds.")
