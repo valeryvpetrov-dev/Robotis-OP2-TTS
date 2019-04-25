@@ -110,6 +110,9 @@ class CLIParser(LoggableInterface):
         :param args: parsed arguments.
         :return: bool - validation result. (True - valid, False - invalid).
         """
+        import re
+        from os.path import abspath
+
         if not args.text and not args.file:
             raise NoSourceTextException()
 
@@ -118,6 +121,14 @@ class CLIParser(LoggableInterface):
 
         if args.file:
             self.logger.debug("Text file path %s" % args.file)
+
+            # process ./input directory files
+            regex_file_local = re.compile(r'(\.?[\/|\w|\.]*?\.[\w:]+)')
+
+            if regex_file_local.match(args.file):  # if path to source text file is given
+                if args.file[0] == '.':  # if source file is located in local input directory
+                    args.file = args.file.replace('.', abspath('./input/'), 1)
+
             if os.path.isfile(args.file):
                 if os.stat(args.file).st_size > 0:
                     self.logger.debug("Text file was found.")
