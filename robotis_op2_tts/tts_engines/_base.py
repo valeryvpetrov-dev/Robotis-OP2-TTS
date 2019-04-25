@@ -62,6 +62,7 @@ class AbstractTTSClient(InterfaceTTSClient, LoggableInterface):
         # creates audio file corresponding to source text
         if hasattr(source_text, 'read'):             # if source_text is represented as file
             _str_name_file_audio = basename(source_text.name).split(".")[0]
+            _str_name_file_audio = ".".join(basename(source_text.name).split(".")[:-1])
         else:                                               # if source_text is represented as string
             _str_name_file_audio = datetime.datetime.now().strftime("%Y-%m-%d.%H:%M:%S")
         _str_name_file_audio = "%s.%s" % (_str_name_file_audio, self._str_format_file_audio)
