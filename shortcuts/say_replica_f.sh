@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# source local ~/.bashrc
-source ~/.bashrc
 
 # source virtualenvwrapper commands to current script
 source $(which virtualenvwrapper.sh)
