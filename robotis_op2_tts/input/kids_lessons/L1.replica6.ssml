@@ -1,0 +1,19 @@
+<speak>
+	<seq>
+		<media xml:id="hands_1" >
+			<speak>
+				<emphasis level="strong">For our game we need hands.</emphasis>
+			</speak>
+		</media>
+		<media xml:id="hands_2"  begin="hands_1.end+1s">
+			<speak>
+				<emphasis level="strong">Show me, please, your hands.</emphasis>
+			</speak>
+		</media>
+		<media xml:id="hands_3"  begin="hands_2.end+1.5s">
+			<speak>
+				<emphasis level="strong">Clap your hands.</emphasis>
+			</speak>
+		</media>
+	</seq>
+</speak>

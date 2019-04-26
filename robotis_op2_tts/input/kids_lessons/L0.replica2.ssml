@@ -1,0 +1,14 @@
+<speak>
+	<seq>
+		<media xml:id="introduction_1">
+			<speak>
+				My name is Dar Win.
+			</speak>
+		</media>
+		<media xml:id="introduction_2">
+			<speak>
+				I will help you to learn English.
+			</speak>
+		</media>
+	</seq>
+</speak>

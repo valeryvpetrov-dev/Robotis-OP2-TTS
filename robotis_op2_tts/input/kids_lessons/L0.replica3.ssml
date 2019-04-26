@@ -1,0 +1,9 @@
+<speak>
+	<seq>
+		<media xml:id="greetings_1">
+			<speak>
+				<emphasis level="strong">Hello, kids!</emphasis>
+			</speak>
+		</media>
+	</seq>
+</speak>

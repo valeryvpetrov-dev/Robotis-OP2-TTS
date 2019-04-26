@@ -1,0 +1,24 @@
+<speak>
+	<seq>
+		<media xml:id="word_sunny">
+			<speak>
+				<emphasis level="strong">Sunny</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_hot" begin="word_sunny.end+3s">
+			<speak>
+				<emphasis level="strong">Hot</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_rainy" begin="word_hot.end+3s">
+			<speak>
+				<emphasis level="strong">Rainy</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_snowy" begin="word_rainy.end+3s">
+			<speak>
+				<emphasis level="strong">Snowy</emphasis>
+			</speak>
+		</media>
+	</seq>
+</speak>

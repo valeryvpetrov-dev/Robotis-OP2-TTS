@@ -1,0 +1,10 @@
+<speak>
+	<seq>
+		<media xml:id="zoo_1">
+			<speak>
+				<emphasis level="strong">Oh, I can see a cage!</emphasis>
+				<emphasis level="strong">There is a giraffe in the cage.</emphasis>
+			</speak>
+		</media>
+	</seq>
+</speak>

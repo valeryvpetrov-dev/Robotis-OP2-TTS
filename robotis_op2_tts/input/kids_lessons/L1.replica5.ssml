@@ -1,0 +1,9 @@
+<speak>
+	<seq>
+		<media xml:id="question_season_1">
+			<speak>
+				<prosody rate="slow">What is your favorite season?</prosody>
+			</speak>
+		</media>
+	</seq>
+</speak>
