@@ -10,8 +10,18 @@
 				<emphasis level="strong">Head right!</emphasis>
 			</speak>
 		</media>
+		<media xml:id="head_up_1">
+			<speak>
+				<emphasis level="strong">Head up!</emphasis>
+			</speak>
+		</media>
+		<media xml:id="head_down_1" begin="head_up_1.end+1s">
+			<speak>
+				<emphasis level="strong">Head down!</emphasis>
+			</speak>
+		</media>
 
-		<media xml:id="hands_up_1" begin="head_right_1.end+1s">
+		<media xml:id="hands_up_1" begin="head_down_1.end+1s">
 			<speak>
 				<emphasis level="strong">Hands up!</emphasis>
 			</speak>
@@ -44,8 +54,18 @@
 				<emphasis level="strong">Head right!</emphasis>
 			</speak>
 		</media>
+		<media xml:id="head_up_2">
+			<speak>
+				<emphasis level="strong">Head up!</emphasis>
+			</speak>
+		</media>
+		<media xml:id="head_down_2" begin="head_up_2.end+1s">
+			<speak>
+				<emphasis level="strong">Head down!</emphasis>
+			</speak>
+		</media>
 
-		<media xml:id="hands_up_2" begin="head_right_2.end+1s">
+		<media xml:id="hands_up_2" begin="head_down_2.end+1s">
 			<speak>
 				<emphasis level="strong">Hands up!</emphasis>
 			</speak>
@@ -78,8 +98,18 @@
 				<emphasis level="strong">Head right!</emphasis>
 			</speak>
 		</media>
+		<media xml:id="head_up_3">
+			<speak>
+				<emphasis level="strong">Head up!</emphasis>
+			</speak>
+		</media>
+		<media xml:id="head_down_3" begin="head_up_3.end+1s">
+			<speak>
+				<emphasis level="strong">Head down!</emphasis>
+			</speak>
+		</media>
 
-		<media xml:id="hands_up_3" begin="head_right_3.end+1s">
+		<media xml:id="hands_up_3" begin="head_down_3.end+1s">
 			<speak>
 				<emphasis level="strong">Hands up!</emphasis>
 			</speak>
