@@ -3,11 +3,11 @@
 source ~/.bashrc
 
 VIRTUALENV_NAME="Robotis-OP2-TTS-venv"
-ROSCORE_NAME="roscore"
+ROSMASTER_NAME="rosmaster"
 
 call_replica () {   # calls replica
 # pre configuration
-    roslaunch robotis_op_onboard_launch robotis_op_whole_robot.launch
+#    roslaunch robotis_op_onboard_launch robotis_op_whole_robot.launch  ! It must be run before in another terminal
     # source virtualenvwrapper commands to current script
     source $(which virtualenvwrapper.sh)
     # switch to TTS virtual environment
@@ -15,9 +15,9 @@ call_replica () {   # calls replica
 
 # action
     # start motion
-    rosrun robotis_dance robotis_dance "$1.txt"
+    rosrun robotis_dance robotis_dance "$1.txt" > /dev/null &
     # start speaking
-    python tts.py play -f "./kids_lessons/$1.ssml" > /dev/null  # silent
+    python tts.py play -f "./kids_lessons/$1.ssml" > /dev/null &
 
 # post configuration
     deactivate
@@ -34,11 +34,11 @@ else
 fi
 
 # check if roscore is running
-if pgrep -x ${ROSCORE_NAME} > /dev/null
+if pgrep -x ${ROSMASTER_NAME} > /dev/null
 then
-    echo "'$ROSCORE_NAME' is already running."
+    echo "'$ROSMASTER_NAME' is already running."
 else
-    echo "'$ROSCORE_NAME' is not running. Now it is starting."
+    echo "'$ROSMASTER_NAME' is not running. Now it is starting."
     roscore
 fi
 
