@@ -10,7 +10,7 @@
 				<emphasis level="strong">Head right!</emphasis>
 			</speak>
 		</media>
-		<media xml:id="head_up_1">
+		<media xml:id="head_up_1" begin="head_right_1.end+1s">
 			<speak>
 				<emphasis level="strong">Head up!</emphasis>
 			</speak>
@@ -54,7 +54,7 @@
 				<emphasis level="strong">Head right!</emphasis>
 			</speak>
 		</media>
-		<media xml:id="head_up_2">
+		<media xml:id="head_up_2" begin="head_right_2.end+1s">
 			<speak>
 				<emphasis level="strong">Head up!</emphasis>
 			</speak>
@@ -98,7 +98,7 @@
 				<emphasis level="strong">Head right!</emphasis>
 			</speak>
 		</media>
-		<media xml:id="head_up_3">
+		<media xml:id="head_up_3" begin="head_right_3.end+1s">
 			<speak>
 				<emphasis level="strong">Head up!</emphasis>
 			</speak>
