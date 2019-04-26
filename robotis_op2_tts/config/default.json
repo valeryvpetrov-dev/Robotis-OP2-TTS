@@ -22,21 +22,6 @@
           "test_download_destination": "google.com"
         }
       }
-    },
-    "onboard": {
-      "priority": 1,
-      "festival": {
-        "play": {
-          "command": "echo \"{text}\" | festival --tts",
-          "call_params": {
-            "--language": "english"
-          }
-        },
-        "save": {
-          "command": "echo \"{text}\" | text2wave -o {file}",
-          "expression": "'(voice_rab_diphone)'"
-        }
-      }
     }
   }
 }
