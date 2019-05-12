@@ -1,0 +1,9 @@
+<speak>
+	<seq>
+		<media xml:id="answer_season_spring_1">
+			<speak>
+				<emphasis level="strong">Yes, it's spring!</emphasis>
+			</speak>
+		</media>
+	</seq>
+</speak>

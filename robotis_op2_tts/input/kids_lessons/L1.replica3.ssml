@@ -1,0 +1,54 @@
+<speak>
+	<seq>
+		<media xml:id="word_1">
+			<speak>
+				<emphasis level="strong">Winter</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_2" begin="word_1.end+3s">
+			<speak>
+				<emphasis level="strong">Spring</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_3" begin="word_2.end+3s">
+			<speak>
+				<emphasis level="strong">Summer</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_4" begin="word_3.end+3s">
+			<speak>
+				<emphasis level="strong">Autumn</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_5" begin="word_4.end+3s">
+			<speak>
+				<emphasis level="strong">Sunny</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_6" begin="word_5.end+3s">
+			<speak>
+				<emphasis level="strong">Rainy</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_7" begin="word_6.end+3s">
+			<speak>
+				<emphasis level="strong">Windy</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_8" begin="word_7.end+3s">
+			<speak>
+				<emphasis level="strong">Frosty</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_9" begin="word_8.end+3s">
+			<speak>
+				<emphasis level="strong">Stormy</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_10" begin="word_9.end+3s">
+			<speak>
+				<emphasis level="strong">Rainbow</emphasis>
+			</speak>
+		</media>
+	</seq>
+</speak>
