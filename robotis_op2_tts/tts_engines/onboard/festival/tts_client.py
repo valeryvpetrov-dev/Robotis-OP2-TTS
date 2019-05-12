@@ -65,7 +65,7 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
 
             if hasattr(source_text, 'read'):     # if source_text is represented as file
                 try:
-                    source_text = source_text.read()
+                    source_text = source_text.read().strip()
                 except UnicodeDecodeError as e:         # if source text file is not text file
                     self.logger.error(msg=str(e), exc_info=True)
                     exit()
@@ -103,7 +103,7 @@ class TTSFestivalClient(AbstractTTSClient, InterfaceTTSOnboardClient):
 
         if hasattr(source_text, 'read'):  # if source_text is represented as file
             try:
-                source_text = source_text.read()
+                source_text = source_text.read().strip()
             except UnicodeDecodeError as e:      # if source text file is not text file
                 self.logger.error(msg=str(e), exc_info=True)
                 exit()
