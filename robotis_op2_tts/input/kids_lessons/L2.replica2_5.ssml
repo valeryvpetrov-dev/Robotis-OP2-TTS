@@ -1,0 +1,9 @@
+<speak>
+	<seq>
+		<media xml:id="animals_1">
+			<speak>
+				<prosody rate="slow" pitch="+4st">Oh, I can see a hare!</prosody>
+			</speak>
+		</media>
+	</seq>
+</speak>
