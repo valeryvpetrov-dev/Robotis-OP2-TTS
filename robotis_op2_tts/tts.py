@@ -62,7 +62,7 @@ if __name__ == '__main__':
                         source_text = open(list_args[0])
                     else:
                         source_text = list_args[0]
-
+                        
                     if str_command == 'say':
                         tts.synthesize_speech(source_text)
                     elif str_command == 'save':
