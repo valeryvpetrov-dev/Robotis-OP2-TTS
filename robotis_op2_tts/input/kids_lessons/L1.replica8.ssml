@@ -1,9 +1,0 @@
-<speak>
-	<seq>
-		<media xml:id="goodbye_1">
-			<speak>
-				<emphasis level="strong">Bye-bye, children!</emphasis>
-			</speak>
-		</media>
-	</seq>
-</speak>

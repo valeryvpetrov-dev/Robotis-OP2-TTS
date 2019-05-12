@@ -1,9 +1,0 @@
-<speak>
-	<seq>
-		<media xml:id="animal_1">
-			<speak>
-				<emphasis level="strong">I can see a bird!</emphasis> 
-			</speak>
-		</media>
-	</seq>
-</speak>

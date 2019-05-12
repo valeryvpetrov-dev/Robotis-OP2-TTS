@@ -1,9 +1,0 @@
-<speak>
-	<seq>
-		<media xml:id="question_season_winter_1">
-			<speak>
-				<prosody rate="slow">Is it winter now?</prosody>
-			</speak>
-		</media>
-	</seq>
-</speak>

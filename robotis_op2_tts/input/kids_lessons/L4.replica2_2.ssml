@@ -1,9 +1,0 @@
-<speak>
-	<seq>
-		<media xml:id="zoo_1">
-			<speak>
-				<emphasis level="strong">The giraffe says<break time="0.5s"/> other animals are here, too.</emphasis>
-			</speak>
-		</media>
-	</seq>
-</speak>
