@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     tts = RobotisOP2TTSClient(str_path_file_config)
 
-    regex_file = re.compile(r'(\.?[\/|\w|\.]*?\.[\w:]+)')
+    regex_file = re.compile(r'\.?(\/[\w]+)*\/[\w]+\.[\w]+')
     source_text = None
     bool_is_session_opened = True
     cli.logger.info("Session has been begun.")
@@ -55,23 +55,20 @@ if __name__ == '__main__':
             elif str_command == 'help':
                 cli.print_prompt()
             else:
-                if regex_file.match(list_args[0]):  # if path to source text file is given
-                    try:
-                        if list_args[0][0] == '.':      # if source file is located in local input directory
-                            list_args[0] = list_args[0].replace('.', abspath('../input/'), 1)
-                            source_text = open(list_args[0])
-                        else:
-                            source_text = open(list_args[0])
-                    except IOError as e:
-                        cli.logger.error(msg=str(e))
-                else:
-                    source_text = list_args[0]
-
-                if source_text:
+                try:
+                    if regex_file.match(list_args[0]):
+                        if list_args[0][0] == '.':  # if source file is located in local input directory
+                            list_args[0] = list_args[0].replace('.', abspath('./input/'), 1)
+                        source_text = open(list_args[0])
+                    else:
+                        source_text = list_args[0]
+                        
                     if str_command == 'say':
                         tts.synthesize_speech(source_text)
                     elif str_command == 'save':
                         tts.synthesize_audio(source_text)
+                except IOError as e:
+                    cli.logger.error(msg=str(e))
 
     cli.logger.info("Session has been ended.")
     if source_text:

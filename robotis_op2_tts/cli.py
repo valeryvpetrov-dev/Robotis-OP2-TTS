@@ -169,6 +169,6 @@ class CLI(LoggableInterface):
               "usage: <command> [arguments] \n " \
               "Available commands:\n" \
               "\thelp                     - show this help message.\n" \
-              "\tsay [string/file path]   - speaks passed text from source.\n" \
-              "\tsave [string/file path]  - saves synthesized text to file.\n" \
+              "\tsay [source string/file path]   - speaks passed text from source.\n" \
+              "\tsave [source string/file path]  - saves synthesized from source text to file.\n" \
               "\texit                     - ends current session.\n"
