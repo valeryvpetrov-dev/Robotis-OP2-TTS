@@ -55,17 +55,20 @@ if __name__ == '__main__':
             elif str_command == 'help':
                 cli.print_prompt()
             else:
-                if regex_file.match(list_args[0]):
-                    if list_args[0][0] == '.':  # if source file is located in local input directory
-                        list_args[0] = list_args[0].replace('.', abspath('./input/'), 1)
-                    source_text = open(list_args[0])
-                else:
-                    source_text = list_args[0]
+                try:
+                    if regex_file.match(list_args[0]):
+                        if list_args[0][0] == '.':  # if source file is located in local input directory
+                            list_args[0] = list_args[0].replace('.', abspath('./input/'), 1)
+                        source_text = open(list_args[0])
+                    else:
+                        source_text = list_args[0]
 
-                if str_command == 'say':
-                    tts.synthesize_speech(source_text)
-                elif str_command == 'save':
-                    tts.synthesize_audio(source_text)
+                    if str_command == 'say':
+                        tts.synthesize_speech(source_text)
+                    elif str_command == 'save':
+                        tts.synthesize_audio(source_text)
+                except IOError as e:
+                    cli.logger.error(msg=str(e))
 
     cli.logger.info("Session has been ended.")
     if source_text:
