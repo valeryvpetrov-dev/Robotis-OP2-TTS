@@ -1,0 +1,14 @@
+<speak>
+	<seq>
+		<media xml:id="zoo_1">
+			<speak>
+				<emphasis level="strong">It is magic.</emphasis>
+				<prosody rate="medium" pitch="+3st">
+					If you close your eyes and say<break time="0.5s"/>
+					"In the cage, in the cage,<break time="0.2s"/> a little tiger is in the cage!",<break time="0.5s"/>
+					then you can see a tiger in the cage.
+				</prosody>
+			</speak>
+		</media>
+	</seq>
+</speak>
