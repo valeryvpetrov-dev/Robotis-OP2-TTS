@@ -1,0 +1,39 @@
+<speak>
+	<par>
+		<media xml:id="intro">
+			<speak>
+				<emphasis level="strong">
+					Now use your hands.
+					<break time="0.6s"/>
+				</emphasis>
+			</speak>
+		</media>
+
+		<media xml:id="music" begin="intro.end+0s" soundLevel="-25db" fadeInDur="1s" fadeOutDur="1s" end="26.0s">
+			<audio src="https://incompetech.com/music/royalty-free/mp3-royaltyfree/Barroom%20Ballet.mp3"/>
+		</media>
+
+		<media xml:id="exercise_1" begin="music.begin+1s" repeatCount="3">
+			<speak>
+				<emphasis level="strong">
+					Hands up!
+					<break time="1s"/>
+					Hands down!
+					<break time="1s"/>
+					Hands to the sides!
+					<break time="1s"/>
+				</emphasis>
+			</speak>
+		</media>
+
+		<media xml:id="exercise_2" begin="exercise_1.end+0s">
+			<speak>
+				<emphasis level="strong">
+					Hands down!
+					<break time="1s"/>
+					Well done!
+				</emphasis>
+			</speak>
+		</media>
+	</par>
+</speak>

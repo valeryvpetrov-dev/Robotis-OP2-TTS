@@ -1,0 +1,30 @@
+<speak>
+	<par>
+		<media xml:id="music" soundLevel="-25db" fadeInDur="1s" fadeOutDur="1s" end="20.0s">
+			<audio src="https://incompetech.com/music/royalty-free/mp3-royaltyfree/Barroom%20Ballet.mp3"/>
+		</media>
+
+		<media xml:id="exercise_1" begin="music.begin+1s" repeatCount="2">
+			<speak>
+				<emphasis level="strong">
+					Turn your head left!
+					<break time="1s"/>
+					Turn your head right!
+					<break time="1s"/>
+					Once again.
+					<break time="1s"/>
+				</emphasis>
+			</speak>
+		</media>
+
+		<media xml:id="exercise_2" begin="exercise_1.end+0s">
+			<speak>
+				<emphasis level="strong">
+					Turn your head left!
+					<break time="1s"/>
+					Turn your head right!
+				</emphasis>
+			</speak>
+		</media>
+	</par>
+</speak>

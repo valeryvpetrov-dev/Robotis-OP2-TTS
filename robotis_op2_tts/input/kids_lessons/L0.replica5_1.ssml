@@ -1,0 +1,11 @@
+<speak>
+	<seq>
+		<media xml:id="exercise_1">
+			<speak>
+				<prosody rate="slow">Let's start. We repeat every exercise</prosody>
+				<prosody rate="x-slow">3 times.</prosody><break time="0.2s"/>
+				<prosody rate="slow" pitch="+4st">Are you ready?</prosody>
+			</speak>
+		</media>
+	</seq>
+</speak>

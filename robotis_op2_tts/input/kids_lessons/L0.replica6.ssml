@@ -1,0 +1,18 @@
+<speak>
+	<seq>
+		<media xml:id="goodbye_1">
+			<speak>
+				<emphasis level="strong">
+					Good-bye, kids!
+					I was very happy to meet you today.
+				</emphasis>
+				<prosody rate="slow" pitch="-2st">
+					If you learn English well, we will play football together after our last class!
+				</prosody>
+				<emphasis level="strong">
+					See you soon!
+				</emphasis>
+			</speak>
+		</media>
+	</seq>
+</speak>
