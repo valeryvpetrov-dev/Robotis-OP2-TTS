@@ -1,6 +1,10 @@
 <speak>
-	<seq>
-		<media xml:id="word_1" >
+	<par>
+		<media xml:id="music" soundLevel="-25db" fadeInDur="1s" fadeOutDur="1s" end="70.0s">
+			<audio src="https://incompetech.com/music/royalty-free/mp3-royaltyfree/Teddy%20Bear%20Waltz.mp3"/>
+		</media>
+
+		<media xml:id="word_1" begin="music.begin+1s">
 			<speak>
 				<emphasis level="strong">Dog</emphasis>
 			</speak>
@@ -66,5 +70,5 @@
 				<emphasis level="strong">Good of you!</emphasis>
 			</speak>
 		</media>
-	</seq>
+	</par>
 </speak>
