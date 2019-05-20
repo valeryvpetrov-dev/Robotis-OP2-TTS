@@ -1,6 +1,6 @@
 <speak>
 	<par>
-		<media xml:id="music" soundLevel="-25db" fadeInDur="1s" fadeOutDur="1s" end="70.0s">
+		<media xml:id="music" soundLevel="-40db" fadeInDur="1s" fadeOutDur="1s" end="70.0s">
 			<audio src="https://incompetech.com/music/royalty-free/mp3-royaltyfree/Teddy%20Bear%20Waltz.mp3"/>
 		</media>
 
