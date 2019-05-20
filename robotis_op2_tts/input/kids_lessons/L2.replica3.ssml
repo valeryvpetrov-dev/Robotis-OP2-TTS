@@ -1,0 +1,39 @@
+<speak>
+	<par>
+		<media xml:id="music" soundLevel="-35db" fadeInDur="1s" fadeOutDur="1s" end="+31.0s">
+			<audio src="https://incompetech.com/music/royalty-free/mp3-royaltyfree/Derp%20Nugget.mp3"/>
+		</media>
+
+		<media xml:id="animal_1" begin="music.begin+2s">
+			<speak>
+				<emphasis level="strong">I can see a squirrel!</emphasis>
+			</speak>
+		</media>
+		<media xml:id="animal_2" begin="animal_1.begin+5s">
+			<speak>
+				<emphasis level="strong">I can see a wolf!</emphasis>
+			</speak>
+		</media>
+		<media xml:id="animal_3" begin="animal_2.begin+5s">
+			<speak>
+				<emphasis level="strong">I can see a hare!</emphasis>
+			</speak>
+		</media>
+		<media xml:id="animal_4" begin="animal_3.begin+5s">
+			<speak>
+				<emphasis level="strong">I can see a hedgehog!</emphasis>
+			</speak>
+		</media>
+		<media xml:id="animal_5" begin="animal_4.begin+5s">
+			<speak>
+				<emphasis level="strong">I can see a fox!</emphasis>
+			</speak>
+		</media>
+		<media xml:id="animal_6" begin="animal_5.begin+5s">
+			<speak>
+				<emphasis level="strong">I can see a bird!</emphasis>
+			</speak>
+		</media>
+	</par>
+</speak>
+
