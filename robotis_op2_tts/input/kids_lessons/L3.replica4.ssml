@@ -2,7 +2,7 @@
 	<seq>
 		<media xml:id="goodbye_1">
 			<speak>
-				<emphasis level="strong">Good-bye!</emphasis>
+				<emphasis level="strong">Good-bye children! See you soon!</emphasis>
 			</speak>
 		</media>
 	</seq>

@@ -2,7 +2,7 @@
 	<seq>
 		<media xml:id="animal_1">
 			<speak>
-				<emphasis level="strong">Deer, come here!</emphasis>
+				<emphasis level="strong">Elk, come here!</emphasis>
 			</speak>
 		</media>
 	</seq>

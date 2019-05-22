@@ -1,9 +1,8 @@
 <speak>
 	<seq>
-		<media xml:id="game_1">
+		<media xml:id="exercise_1">
 			<speak>
-				<emphasis level="strong">Yes, I do.</emphasis>
-				<prosody rate="slow" pitch="+3st">We can play "What is missing?"</prosody>
+				<emphasis level="strong">Kids, stand up please.</emphasis>
 			</speak>
 		</media>
 	</seq>
