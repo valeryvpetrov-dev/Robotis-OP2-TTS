@@ -1,0 +1,14 @@
+<speak>
+	<seq>
+		<media xml:id="goodbye_1">
+			<speak>
+				<emphasis level="strong">
+					Thank you too!
+					It was very interesting to learn English with you!
+					I will come back!
+					Bye-bye, kids!
+				</emphasis>
+			</speak>
+		</media>
+	</seq>
+</speak>

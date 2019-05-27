@@ -2,8 +2,13 @@
 	<seq>
 		<media xml:id="greetings_1">
 			<speak>
-				<emphasis level="strong">Hello, kids!</emphasis><break time="0.5s"/>
-				<prosody rate="slow" pitch="+3st">How are you?</prosody>
+				<emphasis level="strong">
+					Hello, kids!
+				</emphasis>
+				<break time="0.5s"/>
+				<prosody rate="slow" pitch="+3st">
+					How are you?
+				</prosody>
 			</speak>
 		</media>
 	</seq>

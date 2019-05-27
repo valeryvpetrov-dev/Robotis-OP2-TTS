@@ -1,0 +1,15 @@
+<speak>
+	<seq>
+		<media xml:id="call_1">
+			<speak>
+				<emphasis level="strong">
+					Open your eyes!
+					<break time="0.7s"/>
+					<prosody rate="slow" pitch="-1st">
+						Who's in the cage?
+					</prosody>
+				</emphasis>
+			</speak>
+		</media>
+	</seq>
+</speak>

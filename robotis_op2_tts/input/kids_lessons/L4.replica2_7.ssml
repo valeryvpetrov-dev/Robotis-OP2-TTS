@@ -2,8 +2,12 @@
 	<seq>
 		<media xml:id="call_1">
 			<speak>
+				<prosody rate="slow" pitch="+3st">
+					Where is the lion?
+				</prosody>
+				<break time="0.3s"/>
 				<emphasis level="strong">
-					The giraffe says<break time="0.5s"/> other animals are here, too.
+					It is in the jungle!
 				</emphasis>
 			</speak>
 		</media>

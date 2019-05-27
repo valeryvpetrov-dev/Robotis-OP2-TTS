@@ -1,0 +1,15 @@
+<speak>
+	<seq>
+		<media xml:id="call_1">
+			<speak>
+				<prosody rate="slow" pitch="+3st">
+					Where is the elephant?
+				</prosody>
+				<break time="0.3s"/>
+				<emphasis level="strong">
+					It is in the jungle!
+				</emphasis>
+			</speak>
+		</media>
+	</seq>
+</speak>

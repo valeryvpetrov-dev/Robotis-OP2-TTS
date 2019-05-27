@@ -1,9 +1,10 @@
 <speak>
 	<seq>
-		<media xml:id="zoo_1">
+		<media xml:id="call_1">
 			<speak>
-				<prosody rate="slow" pitch="+3st">Where is the lion?</prosody><break time="0.3s"/>
-				<emphasis level="strong">It is in the jungle!</emphasis>
+				<emphasis level="strong">
+					Ok, children, close your eyes.
+				</emphasis>
 			</speak>
 		</media>
 	</seq>

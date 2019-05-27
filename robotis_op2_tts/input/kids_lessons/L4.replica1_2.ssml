@@ -1,0 +1,22 @@
+<speak>
+	<par>
+		<media xml:id="music" soundLevel="-35db" fadeInDur="1s" fadeOutDur="1s" repeatDur="+35.0s">
+			<audio src="https://s3.amazonaws.com/pb_previews/302_adventure-island/302_short3_adventure-island_0059_preview.mp3"/>
+		</media>
+
+		<media xml:id="call_1" begin="music.begin+1s" repeatCount="2">
+			<speak>
+				<emphasis level="strong">
+					I can go to the Zoo!
+					<break time="3s"/>
+					I can see a kangaroo!
+					<break time="3s"/>
+					I can see a hare!
+					<break time="3s"/>
+					I can see a bear!
+					<break time="3s"/>
+				</emphasis>
+			</speak>
+		</media>
+	</par>
+</speak>

@@ -1,0 +1,26 @@
+<speak>
+	<seq>
+		<media xml:id="numbers">
+			<say-as interpret-as="cardinal">1</say-as><break time="1.5s"/>
+			<say-as interpret-as="cardinal">2</say-as><break time="1.5s"/>
+			<say-as interpret-as="cardinal">3</say-as><break time="1.5s"/>
+			<say-as interpret-as="cardinal">4</say-as><break time="1.5s"/>
+			<say-as interpret-as="cardinal">5</say-as><break time="1.5s"/>
+			<say-as interpret-as="cardinal">6</say-as><break time="1.5s"/>
+			<say-as interpret-as="cardinal">7</say-as><break time="1.5s"/>
+			<say-as interpret-as="cardinal">8</say-as><break time="1.5s"/>
+			<say-as interpret-as="cardinal">9</say-as><break time="1.5s"/>
+			<say-as interpret-as="fraction">10</say-as><break time="1.5s"/>
+			<say-as interpret-as="fraction">11</say-as><break time="1.5s"/>
+			<say-as interpret-as="fraction">12</say-as><break time="1.5s"/>
+			<say-as interpret-as="fraction">13</say-as><break time="1.5s"/>
+			<say-as interpret-as="fraction">14</say-as><break time="1.5s"/>
+			<say-as interpret-as="fraction">15</say-as><break time="1.5s"/>
+			<say-as interpret-as="fraction">16</say-as><break time="1.5s"/>
+			<say-as interpret-as="fraction">17</say-as><break time="1.5s"/>
+			<say-as interpret-as="fraction">18</say-as><break time="1.5s"/>
+			<say-as interpret-as="fraction">19</say-as><break time="1.5s"/>
+			<say-as interpret-as="fraction">20</say-as><break time="1.5s"/>
+		</media>
+	</seq>
+</speak>

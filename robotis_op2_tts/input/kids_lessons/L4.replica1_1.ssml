@@ -3,7 +3,7 @@
 		<media xml:id="call_1">
 			<speak>
 				<emphasis level="strong">
-					The giraffe says<break time="0.5s"/> other animals are here, too.
+					Let's go to the zoo!
 				</emphasis>
 			</speak>
 		</media>

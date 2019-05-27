@@ -1,0 +1,53 @@
+<speak>
+	<par>
+		<media xml:id="word_1">
+			<speak>
+				<emphasis level="strong">
+					Tiger
+				</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_2"  begin="word_1.end+5s">
+			<speak>
+				<emphasis level="strong">
+					Lion
+				</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_3"  begin="word_2.end+5s">
+			<speak>
+				<emphasis level="strong">
+					Elephant
+				</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_4"  begin="word_3.end+5s">
+			<speak>
+				<emphasis level="strong">
+					Crocodile
+				</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_5"  begin="word_4.end+5s">
+			<speak>
+				<emphasis level="strong">
+					Parrot
+				</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_6"  begin="word_5.end+5s">
+			<speak>
+				<emphasis level="strong">
+					Giraffe
+				</emphasis>
+			</speak>
+		</media>
+		<media xml:id="word_7"  begin="word_6.end+5s">
+			<speak>
+				<emphasis level="strong">
+					Kangaroo
+				</emphasis>
+			</speak>
+		</media>
+	</par>
+</speak>
